@@ -1805,24 +1805,14 @@ function salvarPDF(){
   togglePdfButtonsBusy(true,'btn-salvar-pdf','⏳ Abrindo...');
   try{
     if(typeof window.print!=='function') throw new Error('Este navegador não suporta impressão.');
-    // Calcular espaço restante na última página para empurrar rodapé até o fundo
-    const content=document.getElementById('pdf-overlay-content');
-    const spacer=document.getElementById('pdf-last-spacer');
-    if(content&&spacer){
-      const A4H=1123; // A4 a 96dpi: 297mm × 3.7795 ≈ 1123px
-      const totalH=content.scrollHeight;
-      const lastH=totalH%A4H;
-      const remaining=lastH>10?A4H-lastH:0;
-      spacer.style.height=(remaining>30?remaining-26:0)+'px';
-    }
-    // Nome do arquivo: NOME_RELATORIO DE VISITA TECNICA
     const capTitulo=document.querySelector('#pdf-overlay .cap-titulo');
     const nomeProjeto=capTitulo?capTitulo.textContent.trim().toUpperCase().replace(/\s+/g,'_'):'IMOVEL';
     const origTitle=document.title;
-    document.title=nomeProjeto+'_RELATORIO DE VISITA TECNICA';
+    const onBefore=()=>{ document.title=nomeProjeto+'_RELATORIO DE VISITA TECNICA'; };
+    const onAfter=()=>{ document.title=origTitle; window.removeEventListener('beforeprint',onBefore); window.removeEventListener('afterprint',onAfter); };
+    window.addEventListener('beforeprint',onBefore);
+    window.addEventListener('afterprint',onAfter);
     window.print();
-    document.title=origTitle;
-    if(spacer)spacer.style.height='0';
   }catch(err){
     console.error('Erro ao salvar PDF:',err);
     alert('Não foi possível abrir a opção de salvar. Erro: '+(err.message||err));
