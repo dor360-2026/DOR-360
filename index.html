@@ -86,6 +86,31 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
 }
 .chip.sel{background:var(--azul);border-color:var(--azul);color:#fff}
 .chip:active{transform:scale(.97)}
+/* ── Módulo Viabilidade de RM ── */
+.chip.ver-sim.sel{background:#16a34a;border-color:#16a34a}
+.chip.ver-ress.sel{background:#ea8c00;border-color:#ea8c00}
+.chip.ver-nao.sel{background:#dc2626;border-color:#dc2626}
+.rm-alerta-box{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;margin-top:8px}
+.rm-alerta-tit{font-size:11px;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.rm-hint{color:var(--azul);font-weight:700}
+.rm-aviso{background:#fff8e1;border:1.5px solid #e8d195;border-radius:8px;padding:10px 12px;font-size:12px;color:#7c5a00;line-height:1.5;font-weight:600}
+.rm-sub-hdr{font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:.08em;margin:6px 0 2px;padding-bottom:5px;border-bottom:1.5px solid var(--cinza-borda)}
+.rm-num{font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.03em;margin-right:6px}
+.modo-home{position:fixed;inset:0;z-index:600;background:var(--azul);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:14px}
+.modo-home .mh-brand{font-size:12px;font-weight:700;color:var(--azul-claro);text-transform:uppercase;letter-spacing:.1em}
+.modo-home .mh-logo{font-size:42px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:4px}
+.modo-home .mh-sub{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:18px;text-align:center}
+.mh-btn{width:100%;max-width:420px;background:#fff;border:none;border-radius:14px;padding:18px 20px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.mh-btn .mh-ic{font-size:28px}
+.mh-btn .mh-t{font-size:15px;font-weight:800;color:var(--azul-escuro)}
+.mh-btn .mh-d{font-size:11.5px;color:#64748b;margin-top:2px;line-height:1.35}
+.btn-trocar-modo{position:fixed;top:14px;left:14px;z-index:598;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:50px;padding:7px 13px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.02em;display:none}
+.tela-senha{position:fixed;inset:0;z-index:700;background:var(--azul-escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:12px}
+.tela-senha input{max-width:300px;text-align:center;font-size:18px;letter-spacing:.2em;text-transform:none}
+.tela-senha .ts-erro{color:#ffb4b4;font-size:12px;font-weight:700;min-height:16px}
+.mnuv-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:8px;letter-spacing:.05em;margin-left:6px;vertical-align:middle}
+.mnuv-badge-rm{background:#ede9fe;color:#6d28d9}
+.mnuv-badge-visita{background:#e0f2fe;color:#0369a1}
 .other-input{margin-top:8px;display:none}
 .other-input.show{display:block}
 
@@ -997,7 +1022,37 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
   </div>
 </div>
 
+<!-- ── MÓDULO VIABILIDADE DE RESSONÂNCIA (seções geradas por montarModuloRM) ── -->
+<div id="rm-container"></div>
+
 </div><!-- /app -->
+
+<!-- Tela de senha de acesso (ativa somente quando SENHA_HASH estiver definida) -->
+<div class="tela-senha" id="tela-senha" style="display:none">
+  <div class="mh-brand">REDE D'OR · PROJETOS ESPECIAIS</div>
+  <div class="mh-logo">D'OR 360</div>
+  <div class="mh-sub">Digite a senha de acesso da equipe</div>
+  <input type="password" id="senha-input" placeholder="••••••" onkeydown="if(event.key==='Enter')verificarSenha()">
+  <div class="ts-erro" id="senha-erro"></div>
+  <button class="btn-next" style="max-width:300px" onclick="verificarSenha()">Entrar</button>
+</div>
+
+<!-- Tela inicial: escolha do modo de trabalho -->
+<div class="modo-home" id="modo-home" style="display:none">
+  <div class="mh-brand">REDE D'OR · PROJETOS ESPECIAIS</div>
+  <div class="mh-logo">D'OR 360</div>
+  <div class="mh-sub">O que vamos avaliar hoje?</div>
+  <button class="mh-btn" onclick="escolherModo('visita')">
+    <span class="mh-ic">🏢</span>
+    <span><div class="mh-t">Visita Técnica de Imóvel</div><div class="mh-d">Avaliação completa de imóvel para nova unidade — do zoneamento às instalações</div></span>
+  </button>
+  <button class="mh-btn" onclick="escolherModo('rm')">
+    <span class="mh-ic">🧲</span>
+    <span><div class="mh-t">Viabilidade de Ressonância</div><div class="mh-d">Checklist de implantação de RM em hospital, centro médico ou imóvel externo</div></span>
+  </button>
+</div>
+
+<button class="btn-trocar-modo" id="btn-trocar-modo" onclick="abrirHome()">⇄ Modo</button>
 
 <!-- Overlay do Relatório PDF (renderizado dentro do próprio app, sem depender de nova janela/aba) -->
 <div id="pdf-overlay" class="pdf-overlay-screen">
@@ -1046,6 +1101,7 @@ function capturarEstadoCompleto(){
   return {
     versao:1,
     salvoEm:new Date().toISOString(),
+    modo:(typeof MODO!=='undefined'?MODO:'visita'),
     D,
     camposTexto,
     chipsSelecionados,
@@ -1056,6 +1112,8 @@ function capturarEstadoCompleto(){
 function aplicarEstadoCompleto(estado){
   if(!estado)return false;
   try{
+    // Define o modo do rascunho (visita ou RM) antes de restaurar os campos
+    if(typeof escolherModo==='function')escolherModo(estado.modo||'visita',true);
     // 1. Reconstrói pavimentos primeiro, se houver, para que os campos existam no DOM
     if(estado.D&&estado.D['pavimentos']){
       const pavChip=document.querySelector(`.chip[data-g="pavimentos"]`);
@@ -1093,6 +1151,7 @@ function aplicarEstadoCompleto(estado){
         renderFotos();
       }
       Object.assign(D,estado.D||{});
+      if(typeof atualizarAlertasNumericosRM==='function')atualizarAlertasNumericosRM();
       autoResizeAllTextareas();
     },150);
     return true;
@@ -1335,18 +1394,24 @@ function addFoto(mode){
   inp.click();
 }
 function renderFotos(){
-  const list=document.getElementById('fotos-lista');list.innerHTML='';
-  fotos.forEach((f,i)=>{
-    const div=document.createElement('div');div.className='foto-card';
-    div.innerHTML=`<div class="foto-img-wrap"><img src="${f.dataUrl}" class="foto-img" alt="foto ${i+1}"></div>
-    <div class="foto-body">
-      <input type="text" value="${f.label}" placeholder="DE ONDE É ESTA FOTO?" style="text-transform:uppercase;font-size:14px;padding:10px 12px;border:1.5px solid var(--cinza-borda);border-radius:8px;width:100%" oninput="fotos[${i}].label=this.value.toUpperCase()">
-      <div class="mchips">${FOTO_QUICK.map(lb=>`<div class="mchip${f.label===lb?' sel':''}" onclick="setFotoLabel(${i},'${lb}',this)">${lb}</div>`).join('')}</div>
-      <button class="foto-remove" onclick="removeFoto(${i})">Remover foto</button>
-    </div>`;
-    list.appendChild(div);
+  // Renderiza a galeria nas duas listas (modo Visita e modo RM) — o acervo de fotos é o mesmo relatório
+  ['fotos-lista','fotos-lista-rm'].forEach(listId=>{
+    const list=document.getElementById(listId);if(!list)return;
+    list.innerHTML='';
+    const quick=listId==='fotos-lista-rm'?FOTO_QUICK_RM:FOTO_QUICK;
+    fotos.forEach((f,i)=>{
+      const div=document.createElement('div');div.className='foto-card';
+      div.innerHTML=`<div class="foto-img-wrap"><img src="${f.dataUrl}" class="foto-img" alt="foto ${i+1}"></div>
+      <div class="foto-body">
+        <input type="text" value="${f.label}" placeholder="DE ONDE É ESTA FOTO?" style="text-transform:uppercase;font-size:14px;padding:10px 12px;border:1.5px solid var(--cinza-borda);border-radius:8px;width:100%" oninput="fotos[${i}].label=this.value.toUpperCase()">
+        <div class="mchips">${quick.map(lb=>`<div class="mchip${f.label===lb?' sel':''}" onclick="setFotoLabel(${i},'${lb}',this)">${lb}</div>`).join('')}</div>
+        <button class="foto-remove" onclick="removeFoto(${i})">Remover foto</button>
+      </div>`;
+      list.appendChild(div);
+    });
   });
 }
+const FOTO_QUICK_RM=['PAINEL ELÉTRICO','DISJUNTORES','LOCAL DA SALA','TRAJETO DE ENTRADA','LOCAL DO CHILLER','TRAJETO TUBO QUENCH','PAVIMENTO INFERIOR','PAVIMENTO SUPERIOR'];
 function setFotoLabel(i,lb,el){
   const body=el.closest('.foto-body');
   const wasSel=el.classList.contains('sel');
@@ -1386,26 +1451,43 @@ function collectText(){
     const obs=document.getElementById(`obs-ac-p${i}`);if(obs&&obs.value)D[`obs-ac-p${i}`]=obs.value.toUpperCase();
   }
   const pdObs=document.getElementById('pd-obs');if(pdObs&&pdObs.value)D['pd-obs']=pdObs.value.toUpperCase();
+  collectTextRM();
+}
+/* Coleta genérica dos campos do módulo RM (todos os ids começam com rm-) */
+function collectTextRM(){
+  const cont=document.getElementById('rm-container');
+  if(!cont)return;
+  cont.querySelectorAll('input[type="text"],input[type="number"],input[type="date"],textarea').forEach(el=>{
+    if(!el.id)return;
+    const condParent=el.closest('.cond-field');
+    if(condParent&&condParent.style.display==='none'){D[el.id]='';return;}
+    D[el.id]=el.value?(el.type==='number'||el.type==='date'?el.value:el.value.toUpperCase()):'';
+  });
 }
 
-/* ── Navegar ── */
+/* ── Navegar (as listas de seções mudam conforme o modo: visita ou RM) ── */
+function secsAtual(){return (typeof MODO!=='undefined'&&MODO==='rm')?RM_SECS:SECS;}
+function lblsAtual(){return (typeof MODO!=='undefined'&&MODO==='rm')?RM_LBLS:LBLS;}
 function navTo(dir){
   collectText();
-  const next=cur+dir;if(next<0||next>=SECS.length)return;
-  document.getElementById(SECS[cur]).classList.remove('active');
+  const S=secsAtual();
+  const next=cur+dir;if(next<0||next>=S.length)return;
+  document.getElementById(S[cur]).classList.remove('active');
   cur=next;
-  document.getElementById(SECS[cur]).classList.add('active');
-  if(SECS[cur]==='s-resumo')buildResumo();
+  document.getElementById(S[cur]).classList.add('active');
+  if(S[cur]==='s-resumo')buildResumo();
+  if(S[cur]==='rm-s8')buildResultadoRM();
   updateNav();window.scrollTo(0,0);
   salvarRascunhoAutomatico();
 }
 function updateNav(){
-  const pct=Math.round((cur/(SECS.length-1))*100);
+  const S=secsAtual(),L=lblsAtual();
+  const pct=Math.round((cur/(S.length-1))*100);
   document.getElementById('prog').style.width=pct+'%';
-  document.getElementById('prog-lbl').textContent=LBLS[cur];
-  document.getElementById('sec-ctr').textContent=(cur+1)+' / '+SECS.length;
+  document.getElementById('prog-lbl').textContent=L[cur];
+  document.getElementById('sec-ctr').textContent=(cur+1)+' / '+S.length;
   document.getElementById('btn-back').style.display=cur>0?'block':'none';
-  const last=SECS[cur]==='s-resumo';
+  const last=S[cur]==='s-resumo'||S[cur]==='rm-s8';
   document.getElementById('btn-next').style.display=last?'none':'block';
   document.getElementById('btn-export').style.display='none';
 }
@@ -1626,28 +1708,8 @@ function validarCamposObrigatorios(){
   });
   return faltando;
 }
-function gerarPDF(){
-  collectText();
-  const faltando=validarCamposObrigatorios();
-  if(faltando.length){
-    alert('Antes de gerar o PDF, preencha pelo menos um campo nestas seções:\n\n• '+faltando.join('\n• '));
-    return;
-  }
-  const R=D,n=getPavCount()||1,names=getPavNames();
-  let pdStr='';for(let i=1;i<=n;i++){const v=R[`pd-pav${i}`];if(v)pdStr+=`${names[i-1]}: ${v}m  `;}
-  const dataf=R['data-visita']?new Date(R['data-visita']+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):'—';
-  function fmt(v){if(!v||(Array.isArray(v)&&!v.length))return'—';return Array.isArray(v)?v.join(' / '):v;}
-  function row(l,v,tag){if(!v||v==='—'||v===''||(Array.isArray(v)&&!v.length))return'';const vs=Array.isArray(v)?v.join(' / '):String(v);const tc=tag?{'SIM':'tag-sim','NÃO':'tag-nao','A VERIFICAR':'tag-av','POUCA INTERVENÇÃO':'tag-sim','MÉDIA INTERVENÇÃO':'tag-av','ALTA INTERVENÇÃO':'tag-nao'}[vs]||'':'';return`<tr><td class="lbl">${l}</td><td class="val">${tc?`<span class="${tc}">${vs}</span>`:vs}</td></tr>`;}
-  function sec(titulo,rows){const r=rows.filter(Boolean).join('');if(!r)return'';return`<div class="sb"><div class="sbt">${titulo}</div><table>${r}</table></div>`;}
-  function txt(titulo,texto){if(!texto)return'';return`<div class="sb"><div class="sbt">${titulo}</div><p class="tb">${texto}</p></div>`;}
-  let acab='';
-  for(let p=1;p<=n;p++){const nm=names[p-1];const tipos=['piso','parede','forro'];const tnm=['Piso','Parede','Forro'];
-    let rows=tipos.map((t,ti)=>{const tipo=R[`ac-p${p}-${t}-tipo`];const cond=R[`ac-p${p}-${t}-cond`];const aprov=R[`ac-p${p}-${t}-aprov`];if(!tipo&&!cond)return'';return`<tr><td class="lbl">${tnm[ti]}</td><td class="val">${[tipo,cond?'Condição: '+cond:'',aprov?'Aproveitamento: '+aprov:''].filter(Boolean).join(' · ')}</td></tr>`;}).filter(Boolean).join('');
-    const obs=R[`obs-ac-p${p}`];
-    if(rows||obs||R[`area-pav${p}`]||R[`pd-pav${p}`])acab+=`<div class="sb"><div class="sbt">${nm}</div><table>${R[`area-pav${p}`]?`<tr><td class="lbl">Área</td><td class="val">${R[`area-pav${p}`]} m²</td></tr>`:''} ${R[`pd-pav${p}`]?`<tr><td class="lbl">Pé-direito</td><td class="val">${R[`pd-pav${p}`]} m</td></tr>`:''}${rows}</table>${obs?`<p class="tb">${obs}</p>`:''}</div>`;}
-  let fotosH='';fotos.forEach(f=>{fotosH+=`<div class="fi"><img src="${f.dataUrl}" class="fp"><div class="fl">${f.label||'SEM LEGENDA'}</div></div>`;});
-
-  const PCSS=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Montserrat','Segoe UI',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;color:#1a2740}
+/* CSS do relatório PDF — compartilhado entre o PDF da Visita Técnica e o PDF de Viabilidade de RM */
+const PCSS_PDF=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Montserrat','Segoe UI',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;color:#1a2740}
 .capa{background:#003DA5;min-height:100vh;width:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:50px 60px;position:relative;page-break-after:always;overflow-x:hidden}
 .cap-mark{position:absolute;top:40px;left:60px;font-size:12px;font-weight:800;color:#71C5E8;text-transform:uppercase;letter-spacing:.14em}
 .cap-logo-wrap{position:absolute;top:28px;right:60px;text-align:right}
@@ -1724,6 +1786,29 @@ table{width:100%;border-collapse:collapse}td{padding:5px 0;vertical-align:top;bo
   .close-btn{top:16px;left:16px;font-size:11px;padding:10px 14px}
 }`;
 
+function gerarPDF(){
+  collectText();
+  const faltando=validarCamposObrigatorios();
+  if(faltando.length){
+    alert('Antes de gerar o PDF, preencha pelo menos um campo nestas seções:\n\n• '+faltando.join('\n• '));
+    return;
+  }
+  const R=D,n=getPavCount()||1,names=getPavNames();
+  let pdStr='';for(let i=1;i<=n;i++){const v=R[`pd-pav${i}`];if(v)pdStr+=`${names[i-1]}: ${v}m  `;}
+  const dataf=R['data-visita']?new Date(R['data-visita']+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+  function fmt(v){if(!v||(Array.isArray(v)&&!v.length))return'—';return Array.isArray(v)?v.join(' / '):v;}
+  function row(l,v,tag){if(!v||v==='—'||v===''||(Array.isArray(v)&&!v.length))return'';const vs=Array.isArray(v)?v.join(' / '):String(v);const tc=tag?{'SIM':'tag-sim','NÃO':'tag-nao','A VERIFICAR':'tag-av','POUCA INTERVENÇÃO':'tag-sim','MÉDIA INTERVENÇÃO':'tag-av','ALTA INTERVENÇÃO':'tag-nao'}[vs]||'':'';return`<tr><td class="lbl">${l}</td><td class="val">${tc?`<span class="${tc}">${vs}</span>`:vs}</td></tr>`;}
+  function sec(titulo,rows){const r=rows.filter(Boolean).join('');if(!r)return'';return`<div class="sb"><div class="sbt">${titulo}</div><table>${r}</table></div>`;}
+  function txt(titulo,texto){if(!texto)return'';return`<div class="sb"><div class="sbt">${titulo}</div><p class="tb">${texto}</p></div>`;}
+  let acab='';
+  for(let p=1;p<=n;p++){const nm=names[p-1];const tipos=['piso','parede','forro'];const tnm=['Piso','Parede','Forro'];
+    let rows=tipos.map((t,ti)=>{const tipo=R[`ac-p${p}-${t}-tipo`];const cond=R[`ac-p${p}-${t}-cond`];const aprov=R[`ac-p${p}-${t}-aprov`];if(!tipo&&!cond)return'';return`<tr><td class="lbl">${tnm[ti]}</td><td class="val">${[tipo,cond?'Condição: '+cond:'',aprov?'Aproveitamento: '+aprov:''].filter(Boolean).join(' · ')}</td></tr>`;}).filter(Boolean).join('');
+    const obs=R[`obs-ac-p${p}`];
+    if(rows||obs||R[`area-pav${p}`]||R[`pd-pav${p}`])acab+=`<div class="sb"><div class="sbt">${nm}</div><table>${R[`area-pav${p}`]?`<tr><td class="lbl">Área</td><td class="val">${R[`area-pav${p}`]} m²</td></tr>`:''} ${R[`pd-pav${p}`]?`<tr><td class="lbl">Pé-direito</td><td class="val">${R[`pd-pav${p}`]} m</td></tr>`:''}${rows}</table>${obs?`<p class="tb">${obs}</p>`:''}</div>`;}
+  let fotosH='';fotos.forEach(f=>{fotosH+=`<div class="fi"><img src="${f.dataUrl}" class="fp"><div class="fl">${f.label||'SEM LEGENDA'}</div></div>`;});
+
+  const PCSS=PCSS_PDF;
+
   const html2=`<div class="capa"><button class="close-btn" onclick="document.getElementById('pdf-overlay').style.display='none';var n=document.querySelector('.btn-nuvem-float');if(n)n.style.display='';">← Voltar</button><div class="pdf-actions"><button class="print-btn" id="btn-salvar-pdf" onclick="salvarPDF()">💾 Salvar PDF</button></div><div class="print-hint">Antes de salvar: nas configurações de impressão, desmarque "Cabeçalhos e rodapés" e escolha destino "Salvar como PDF".</div><div class="cap-mark">D'OR 360</div><div class="cap-logo-wrap"><div class="cap-logo">REDE <span>D'</span>OR</div><div class="cap-logo-sub">Projetos Especiais</div></div>
 <div class="cap-tag">Relatório de Visita Técnica</div><div class="cap-titulo">${(R['nome']||'IMÓVEL').toUpperCase()}</div>
 <div class="cap-sub">${R['endereco']||'Endereço não informado'}</div>
@@ -1778,7 +1863,9 @@ ${fotosH?`<div class="pg pg-nova-folha"><div class="pg-hdr"><div><div class="pg-
     }
     styleTag.textContent=PCSS;
     document.getElementById('pdf-overlay-content').innerHTML=html2;
-    document.getElementById('pdf-overlay').style.display='block';
+    const ov=document.getElementById('pdf-overlay');
+    ov.dataset.tipo='visita';
+    ov.style.display='block';
     var nuvemBtn=document.querySelector('.btn-nuvem-float');
     if(nuvemBtn)nuvemBtn.style.display='none';
     window.scrollTo(0,0);
@@ -1807,8 +1894,9 @@ function salvarPDF(){
     if(typeof window.print!=='function') throw new Error('Este navegador não suporta impressão.');
     const capTitulo=document.querySelector('#pdf-overlay .cap-titulo');
     const nomeProjeto=capTitulo?capTitulo.textContent.trim().toUpperCase().replace(/\s+/g,'_'):'IMOVEL';
+    const sufixo=document.getElementById('pdf-overlay').dataset.tipo==='rm'?'_VIABILIDADE DE IMPLANTACAO RM':'_RELATORIO DE VISITA TECNICA';
     const origTitle=document.title;
-    const onBefore=()=>{ document.title=nomeProjeto+'_RELATORIO DE VISITA TECNICA'; };
+    const onBefore=()=>{ document.title=nomeProjeto+sufixo; };
     const onAfter=()=>{ document.title=origTitle; window.removeEventListener('beforeprint',onBefore); window.removeEventListener('afterprint',onAfter); };
     window.addEventListener('beforeprint',onBefore);
     window.addEventListener('afterprint',onAfter);
@@ -1907,8 +1995,9 @@ async function salvarRascunhoNuvem(){
   btn.textContent='Salvando...';btn.disabled=true;
   try{
     const estado=capturarEstadoCompleto();
-    const responsavel=estado.D['responsavel']||'Sem responsável';
-    const nome_imovel=estado.D['nome']||'Sem nome';
+    const ehRM=estado.modo==='rm';
+    const responsavel=(ehRM?(estado.D['rm-prf-lic']||estado.D['rm-prf-inst']):estado.D['responsavel'])||estado.D['responsavel']||'Sem responsável';
+    const nome_imovel=(ehRM?estado.D['rm-nome']:estado.D['nome'])||estado.D['nome']||'Sem nome';
     const cloudId=localStorage.getItem(CLOUD_ID_KEY);
     const payload={responsavel,nome_imovel,status:'rascunho',updated_at:new Date().toISOString(),estado};
     if(cloudId){
@@ -1931,7 +2020,7 @@ async function carregarListaNuvem(){
   const el=document.getElementById('lista-nuvem');
   el.innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:13px">Carregando...</div>';
   try{
-    const rows=await sbReq('relatorios?select=id,updated_at,responsavel,nome_imovel,status&order=updated_at.desc');
+    const rows=await sbReq('relatorios?select=id,updated_at,responsavel,nome_imovel,status,modo:estado->>modo&order=updated_at.desc');
     if(!rows||!rows.length){
       el.innerHTML='<div style="text-align:center;padding:24px;color:#aaa;font-size:13px">Nenhum relatório salvo ainda.<br>Preencha e clique em Salvar!</div>';
       return;
@@ -1940,8 +2029,9 @@ async function carregarListaNuvem(){
     el.innerHTML=rows.map(r=>{
       const dt=new Date(r.updated_at).toLocaleString('pt-BR');
       const ativo=cloudId===r.id;
+      const badge=r.modo==='rm'?'<span class="mnuv-badge mnuv-badge-rm">RM</span>':'<span class="mnuv-badge mnuv-badge-visita">VISITA</span>';
       return `<div class="mnuv-card${ativo?' ativo':''}">
-        <div class="mnuv-card-nome">${r.nome_imovel||'Sem nome'}</div>
+        <div class="mnuv-card-nome">${r.nome_imovel||'Sem nome'}${badge}</div>
         <div class="mnuv-card-meta">👤 ${r.responsavel||'—'} &nbsp;·&nbsp; 🕐 ${dt}</div>
         ${ativo?'<div class="mnuv-card-tag">● ABERTO AGORA NESTE NAVEGADOR</div>':''}
         <div style="display:flex;gap:8px;margin-top:8px">
@@ -1986,17 +2076,18 @@ async function carregarRelatorioNuvem(id){
 }
 
 /* ── Verificação de rascunho salvo ao iniciar ── */
-(function checarRascunhoNaAbertura(){
+// Executa após a carga completa do script, para que o módulo RM já exista no DOM antes de restaurar
+setTimeout(function checarRascunhoNaAbertura(){
   const salvo=carregarRascunhoSalvo();
-  if(salvo&&salvo.D&&(salvo.D['nome']||Object.keys(salvo.camposTexto||{}).length>0)){
-    const nomeProjeto=salvo.D['nome']||'PROJETO SEM NOME';
+  if(salvo&&salvo.D&&(salvo.D['nome']||salvo.D['rm-nome']||Object.keys(salvo.camposTexto||{}).length>0)){
+    const nomeProjeto=salvo.D['nome']||salvo.D['rm-nome']||'PROJETO SEM NOME';
     const dataSalvo=salvo.salvoEm?new Date(salvo.salvoEm).toLocaleString('pt-BR'):'';
     const continuar=confirm(`Encontramos um rascunho salvo neste navegador:\n\n"${nomeProjeto}"\nSalvo em: ${dataSalvo}\n\nDeseja continuar de onde parou? (Cancelar começa um formulário novo, sem apagar o rascunho salvo)`);
     if(continuar){
       aplicarEstadoCompleto(salvo);
     }
   }
-})();
+},80);
 
 // ── Spellcheck, autocomplete e autocorrect em PT-BR ──
 function ativarSpellcheck(){
@@ -2038,6 +2129,673 @@ rebuildPavSection=function(){
     aplicarMultiSelect();
   },120);
 };
+
+/* ════════════════════════════════════════════════════════════════════
+   MÓDULO VIABILIDADE DE RESSONÂNCIA MAGNÉTICA (RM)
+   Checklist de viabilidade de implantação — baseado no checklist de
+   engenharia (OTE_XX2 Anexo 01), com bloco de licenciamento, alertas
+   de impedimento e veredito do profissional.
+   ════════════════════════════════════════════════════════════════════ */
+
+var MODO='visita';
+const RM_SECS=['rm-s1','rm-s2','rm-s3','rm-s4','rm-s5','rm-s6','rm-s7','rm-s8'];
+const RM_LBLS=['CONTEXTO','LICENCIAMENTO','INSTALAÇÕES','INTERFERÊNCIAS','ESPAÇO FÍSICO','CUSTO','FOTOS','RESULTADO'];
+
+/* ── Senha de acesso da equipe (hash SHA-256; vazio = sem senha) ── */
+const SENHA_HASH='';
+const ACESSO_KEY='dor360_acesso';
+
+async function sha256Hex(txt){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(txt));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function verificarSenha(){
+  const inp=document.getElementById('senha-input');
+  const erro=document.getElementById('senha-erro');
+  if(!inp.value){erro.textContent='Digite a senha.';return;}
+  try{
+    const h=await sha256Hex(inp.value.trim());
+    if(h===SENHA_HASH){
+      localStorage.setItem(ACESSO_KEY,SENHA_HASH);
+      document.getElementById('tela-senha').style.display='none';
+      document.getElementById('modo-home').style.display='flex';
+    }else{
+      erro.textContent='Senha incorreta.';
+      inp.value='';inp.focus();
+    }
+  }catch(e){erro.textContent='Erro ao verificar. Tente novamente.';}
+}
+
+/* ── Troca de modo (Visita Técnica × Viabilidade de RM) ── */
+function escolherModo(m,silencioso){
+  MODO=(m==='rm')?'rm':'visita';
+  document.getElementById('modo-home').style.display='none';
+  const ts=document.getElementById('tela-senha');if(ts)ts.style.display='none';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  cur=0;
+  const primeira=document.getElementById(secsAtual()[0]);
+  if(primeira)primeira.classList.add('active');
+  const tm=document.getElementById('btn-trocar-modo');if(tm)tm.style.display='block';
+  atualizarProjLbl();
+  updateNav();
+  if(!silencioso)window.scrollTo(0,0);
+}
+function abrirHome(){
+  collectText();
+  salvarRascunhoAutomatico();
+  document.getElementById('modo-home').style.display='flex';
+}
+function atualizarProjLbl(){
+  const lbl=document.getElementById('proj-lbl');
+  if(MODO==='rm'){
+    const el=document.getElementById('rm-nome');
+    lbl.textContent=(el&&el.value?el.value.toUpperCase():'VIABILIDADE DE RM');
+  }else{
+    const el=document.getElementById('nome');
+    lbl.textContent=(el&&el.value?el.value.toUpperCase():'NOVO IMÓVEL');
+  }
+}
+
+/* ── Definição do checklist RM (estrutura única: gera o formulário E o PDF) ──
+   Tipos: sub (subtítulo) · chips (seleção) · txt/num/data (campo) · area (texto longo)
+          cond (bloco condicional) · alerta (impedimento potencial) · aviso (nota) · preench (preenchido por)
+   chips: ops (opções) · show:{OPÇÃO:idCond} · excl:1 força seleção única · hint (referência) */
+const SNA=['SIM','NÃO','A VERIFICAR'];
+const SNN=['SIM','NÃO','N/A'];
+const RM_DEF=[
+{id:'rm-s1',eyebrow:'Viabilidade de RM · Etapa 01',titulo:'Contexto da Implantação',pdfTag:'V1',pdfTitulo:'Contexto da Implantação',cards:[
+ {hdr:'Identificação',itens:[
+  {t:'txt',id:'rm-nome',lbl:'Nome do projeto',ph:'EX: 2ª RM HOSPITAL BIOCOR',projLbl:1},
+  {t:'txt',id:'rm-endereco',lbl:'Endereço',ph:'RUA, NÚMERO, BAIRRO, CIDADE, UF'},
+  {t:'data',id:'rm-data',lbl:'Data da avaliação'},
+ ]},
+ {hdr:'Tipologia',itens:[
+  {t:'chips',id:'rm-tipologia',lbl:'Tipologia da implantação',excl:1,ops:['ÁREA HOSPITAL','UNIDADE EXTERNA','LOJA COMERCIAL','NOVA CONSTRUÇÃO'],show:{'ÁREA HOSPITAL':'rm-ctx-hosp-wrap','UNIDADE EXTERNA':'rm-ctx-ext-wrap','LOJA COMERCIAL':'rm-ctx-ext-wrap','NOVA CONSTRUÇÃO':'rm-ctx-nova-wrap'}},
+  {t:'cond',id:'rm-ctx-hosp-wrap',itens:[
+   {t:'txt',id:'rm-ctx-hospital',lbl:'Hospital',ph:'EX: HOSPITAL VILLA LOBOS'},
+  ]},
+  {t:'cond',id:'rm-ctx-ext-wrap',itens:[
+   {t:'chips',id:'rm-ctx-situacao',lbl:'Situação do imóvel',excl:1,ops:['EM UTILIZAÇÃO','IMÓVEL NOVO'],show:{'EM UTILIZAÇÃO':'rm-ctx-uso-wrap'}},
+   {t:'cond',id:'rm-ctx-uso-wrap',itens:[
+    {t:'txt',id:'rm-ctx-uso-atual',lbl:'Uso atual do imóvel',ph:'EX: CENTRO MÉDICO, ANTIGA ÁREA DE RECEBÍVEIS...'},
+   ]},
+   {t:'txt',id:'rm-ctx-imovel-nome',lbl:'Nome / identificação do imóvel',ph:'EX: CENTRO MÉDICO VILLA LOBOS'},
+  ]},
+  {t:'cond',id:'rm-ctx-nova-wrap',itens:[
+   {t:'txt',id:'rm-ctx-nova-nome',lbl:'Nome / identificação do empreendimento',ph:'EX: NOVA UNIDADE ...'},
+  ]},
+ ]},
+ {hdr:'Equipamento',itens:[
+  {t:'chips',id:'rm-equip-status',lbl:'Equipamento',excl:1,ops:['JÁ DEFINIDO','USADO COMO REFERÊNCIA']},
+  {t:'txt',id:'rm-equip-desc',lbl:'Descrição do equipamento',ph:'EX: RM 1,5T — REFERÊNCIA POR EXPERIÊNCIA'},
+ ]},
+]},
+{id:'rm-s2',eyebrow:'Viabilidade de RM · Etapa 02',titulo:'Licenciamento',desc:'Bloco inicial: se o licenciamento barrar, o restante nem precisa ser preenchido.',pdfTag:'V2',pdfTitulo:'Licenciamento',cards:[
+ {hdr:'0 · Licenciamento',preench:'rm-prf-lic',itens:[
+  {t:'chips',id:'rm-lic-permite',num:'0.1',lbl:'O licenciamento da área permite a implantação de serviço de exame de imagem?',hint:'em hospital da rede, normalmente sim',ops:SNA},
+  {t:'chips',id:'rm-lic-altera',num:'0.2',lbl:'A intervenção altera fluxos ou áreas aprovadas?',ops:SNA},
+  {t:'chips',id:'rm-lic-visa',num:'0.3',lbl:'Será necessária nova aprovação na Vigilância Sanitária?',ops:SNA,show:{'SIM':'rm-lic-visa-wrap'}},
+  {t:'cond',id:'rm-lic-visa-wrap',itens:[
+   {t:'chips',id:'rm-lic-visa-escopo',num:'0.3.1',lbl:'É possível aprovar somente a área de intervenção, ou será necessária a aprovação do projeto como um todo?',excl:1,ops:['ÁREA DE INTERVENÇÃO','PROJETO COMO UM TODO','A VERIFICAR']},
+  ]},
+  {t:'chips',id:'rm-lic-alvara',num:'0.4',lbl:'Será necessário alvará de reforma?',ops:SNA},
+  {t:'chips',id:'rm-lic-bombeiros',num:'0.5',lbl:'Será necessária nova aprovação do projeto junto ao Corpo de Bombeiros?',ops:SNA},
+  {t:'area',id:'rm-obs-lic',lbl:'Comentários — Licenciamento',ph:'OBSERVAÇÕES SOBRE O LICENCIAMENTO...'},
+ ]},
+]},
+{id:'rm-s3',eyebrow:'Viabilidade de RM · Etapa 03',titulo:'Instalações',pdfTag:'V3',pdfTitulo:'Instalações',cards:[
+ {hdr:'1.1 · Elétrica',preench:'rm-prf-el',itens:[
+  {t:'txt',id:'rm-el-demanda-contratada',num:'1.1.1',lbl:'Demanda contratada (ver conta de energia)',ph:'KVA'},
+  {t:'txt',id:'rm-el-maior-demanda',num:'1.1.2',lbl:'Maior demanda consumida (últimos 12 meses)',ph:'KVA'},
+  {t:'txt',id:'rm-el-trafo-oper',num:'1.1.3',lbl:'Transformadores existentes — operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-el-trafo-res',lbl:'Transformadores existentes — reserva',ph:'QTDE'},
+  {t:'txt',id:'rm-el-trafo-pot',num:'1.1.4',lbl:'Potência dos transformadores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-trafo-tensao',num:'1.1.5',lbl:'Tensão dos transformadores existentes',ph:'V'},
+  {t:'txt',id:'rm-el-trafo-disp',num:'1.1.6',lbl:'Demanda disponível nos transformadores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-ger-oper',num:'1.1.7',lbl:'Geradores existentes — operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-el-ger-res',lbl:'Geradores existentes — reserva',ph:'QTDE'},
+  {t:'txt',id:'rm-el-ger-pot',num:'1.1.8',lbl:'Potência dos geradores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-ger-tensao',num:'1.1.9',lbl:'Tensão dos geradores existentes',ph:'V'},
+  {t:'txt',id:'rm-el-ger-disp',num:'1.1.10',lbl:'Demanda disponível nos geradores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-paineis-transf',num:'1.1.11',lbl:'Quantidade de painéis de transferência',ph:'QTDE'},
+  {t:'txt',id:'rm-el-paineis-bt',num:'1.1.12',lbl:'Quantidade de painéis de baixa tensão alimentados pelo gerador',ph:'QTDE'},
+  {t:'txt',id:'rm-el-paineis-disp',num:'1.1.13',lbl:'Demanda disponível nos painéis existentes',ph:'KVA'},
+  {t:'chips',id:'rm-el-outra-rm-ger',num:'1.1.14',lbl:'Existe outra RM alimentada pelo gerador existente?',ops:SNN},
+  {t:'chips',id:'rm-el-medicao-demanda',num:'1.1.15',lbl:'Necessário contratar medição de demanda no painel?',ops:SNA},
+  {t:'chips',id:'rm-el-medicao-aterramento',num:'1.1.16',lbl:'Necessário contratar medição para aterramento da subestação?',ops:SNA},
+  {t:'chips',id:'rm-el-painel-condicoes',num:'1.1.17',lbl:'As condições físicas do painel que alimentará o novo equipamento estão OK?',hint:'evidenciar por fotos',ops:SNA},
+  {t:'chips',id:'rm-el-painel-norma',num:'1.1.18',lbl:'Painel que alimentará o novo equipamento — norma atendida',excl:1,ops:['IEC 61439','QUADRO CONVENCIONAL','A VERIFICAR']},
+  {t:'sub',lbl:'1.1.19 · O painel possui ESPAÇO FÍSICO para novo disjuntor? (evidenciar por fotos)'},
+  {t:'chips',id:'rm-el-esp-disj-rm',lbl:'a) Para o equipamento da RM',ops:SNA},
+  {t:'chips',id:'rm-el-esp-disj-chiller',lbl:'b) Para o chiller do sistema de criogenia',ops:SNA},
+  {t:'chips',id:'rm-el-esp-disj-clima',lbl:'c) Para o quadro de força da climatização (sala técnica, exames e comando)',ops:SNA},
+  {t:'sub',lbl:'1.1.20 · O painel possui DISJUNTOR DISPONÍVEL? (evidenciar por fotos)'},
+  {t:'chips',id:'rm-el-disj-rm',lbl:'a) Para o equipamento da RM',ops:SNA},
+  {t:'chips',id:'rm-el-disj-chiller',lbl:'b) Para o chiller do sistema de criogenia',ops:SNA},
+  {t:'chips',id:'rm-el-disj-clima',lbl:'c) Para o quadro de força da climatização (sala técnica, exames e comando)',ops:SNA},
+  {t:'chips',id:'rm-el-tensao-unidade',num:'1.1.21',lbl:'Tensão da unidade',excl:1,ops:['220/127','380/220','OUTRA']},
+  {t:'chips',id:'rm-el-trafo-elevador',num:'1.1.22',lbl:'Necessidade de transformador elevador de tensão?',ops:SNA},
+  {t:'chips',id:'rm-el-trafo-elevador-espaco',num:'1.1.23',lbl:'Há espaço físico para instalação de novo transformador elevador? (verificar interferências com o projeto)',ops:SNA},
+  {t:'chips',id:'rm-el-rm-exist-nobreak',num:'1.1.24',lbl:'A RM existente tem alimentação por nobreak exclusivo?',ops:SNN},
+  {t:'chips',id:'rm-el-nobreak-sala-espaco',num:'1.1.25',lbl:'A sala do nobreak exclusivo da RM existente tem espaço para mais equipamentos?',ops:SNN},
+  {t:'chips',id:'rm-el-nova-nobreak',num:'1.1.26',lbl:'A nova RM terá alimentação por nobreak exclusivo?',ops:SNA},
+  {t:'chips',id:'rm-el-eletrocalhas-circ',num:'1.1.27',lbl:'Existem eletrocalhas com alimentadores nas circulações existentes?',ops:SNA},
+  {t:'chips',id:'rm-el-eletrocalhas-sala',num:'1.1.28',lbl:'Existem eletrocalhas com alimentadores na sala de exame proposta?',ops:SNA},
+  {t:'chips',id:'rm-el-redes-principais',num:'1.1.29',lbl:'Existem redes de alimentação elétrica principais na área da sala de exame proposta?',ops:SNA},
+  {t:'chips',id:'rm-el-eletrocalha-espaco',num:'1.1.30',lbl:'A eletrocalha existente possui espaço para os novos cabos de alimentação da RM?',ops:SNA},
+  {t:'chips',id:'rm-el-qualidade-energia',num:'1.1.31',lbl:'Necessário elaborar medição da qualidade de energia no painel que alimentará a RM?',ops:SNA},
+  {t:'txt',id:'rm-el-alim-qtd',num:'1.1.32',lbl:'Quantidade de cabos alimentadores',ph:'EX: 4 CABOS POR FASE'},
+  {t:'txt',id:'rm-el-alim-bitola',num:'1.1.33',lbl:'Bitola dos alimentadores (mm²)',ph:'EX: 95 MM²'},
+ ]},
+ {hdr:'1.2 · Climatização',itens:[
+  {t:'chips',id:'rm-cl-cag',num:'1.2.1',lbl:'A unidade possui climatização com Central de Água Gelada (CAG)?',ops:SNA},
+  {t:'txt',id:'rm-cl-cag-qtd',num:'1.2.2',lbl:'Quantos equipamentos possui a CAG existente',ph:'QTDE'},
+  {t:'txt',id:'rm-cl-cag-taxa',num:'1.2.3',lbl:'Taxa de operação (demanda) da CAG na unidade',ph:'%'},
+  {t:'chips',id:'rm-cl-cag-redund',num:'1.2.4',lbl:'A CAG existente possui redundância de equipamentos?',ops:SNN},
+  {t:'txt',id:'rm-cl-oper',num:'1.2.5',lbl:'Quantos equipamentos são operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-cl-res',num:'1.2.6',lbl:'Quantos equipamentos são reserva',ph:'QTDE'},
+  {t:'chips',id:'rm-cl-cag-carga',num:'1.2.7',lbl:'A CAG existente tem carga disponível para atender a nova RM?',ops:SNA},
+  {t:'txt',id:'rm-cl-carga-disp',num:'1.2.8',lbl:'Carga disponível (TR)',ph:'TR'},
+  {t:'chips',id:'rm-cl-condensacao',num:'1.2.9',lbl:'A unidade tem histórico de condensação?',ops:SNA},
+  {t:'chips',id:'rm-cl-rede-frig',num:'1.2.10',lbl:'A rede de distribuição frigorígena está em boas condições?',ops:SNA},
+  {t:'chips',id:'rm-cl-rm-exist',num:'1.2.11',lbl:'A unidade possui equipamentos de RM existentes?',ops:['SIM','NÃO']},
+  {t:'txt',id:'rm-cl-rm-qtd',num:'1.2.12',lbl:'Quantos equipamentos de RM existem na unidade',ph:'QTDE'},
+  {t:'chips',id:'rm-cl-chiller-criogenia',num:'1.2.13',lbl:'A unidade possui chiller para criogenia existente?',ops:['SIM','NÃO']},
+  {t:'txt',id:'rm-cl-chiller-fab',num:'1.2.14',lbl:'Fabricante do chiller de criogenia existente',ph:'FABRICANTE'},
+  {t:'chips',id:'rm-cl-rm-integrado',num:'1.2.15',lbl:'Na RM existente, o sistema de climatização é do tipo integrado?',ops:SNN},
+  {t:'txt',id:'rm-cl-cag-papel',num:'1.2.16',lbl:'A CAG funciona como sistema operacional ou reserva para a RM existente?',ph:'OPERACIONAL / RESERVA'},
+  {t:'chips',id:'rm-cl-prog-energia',num:'1.2.17',lbl:'A unidade possui programa de eficiência energética?',ops:SNA},
+  {t:'chips',id:'rm-cl-rede-sobre-sala',num:'1.2.18',lbl:'Rede de água gelada ou rede de dutos passa sobre a nova sala de RM?',ops:SNA,show:{'SIM':'rm-cl-rede-wrap'}},
+  {t:'cond',id:'rm-cl-rede-wrap',itens:[
+   {t:'chips',id:'rm-cl-rede-principal',num:'1.2.19',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-cl-rede-desvio',num:'1.2.20',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+  ]},
+  {t:'chips',id:'rm-cl-chiller-espaco',num:'1.2.21',lbl:'Há espaço físico para instalação de chiller dedicado para criogenia?',ops:SNA},
+  {t:'chips',id:'rm-cl-integrado-espaco',num:'1.2.22',lbl:'Há espaço físico para instalação do sistema integrado?',ops:SNA},
+  {t:'chips',id:'rm-cl-hvac-upgrade',num:'1.2.23',lbl:'A unidade possui equipamentos de HVAC com especificação técnica para atender o novo equipamento? (válido para upgrade)',ops:SNN},
+  {t:'chips',id:'rm-cl-casa-maq',num:'1.2.24',lbl:'A unidade possui espaço físico para uma nova casa de máquinas?',ops:SNA},
+  {t:'chips',id:'rm-cl-entreforro',num:'1.2.25',lbl:'A unidade possui espaço físico para equipamentos no entreforro?',ops:SNA},
+  {t:'txt',id:'rm-cl-prumada-temp',num:'1.2.26',lbl:'Temperatura da água gelada na prumada do pavimento onde será instalada a RM',ph:'°C'},
+ ]},
+ {hdr:'1.3 · Gases Medicinais',itens:[
+  {t:'chips',id:'rm-gas-redes',num:'1.3.1',lbl:'Existem redes de gases medicinais sobre a sala, sob o piso ou no interior das paredes do layout proposto?',ops:SNA,show:{'SIM':'rm-gas-wrap'}},
+  {t:'cond',id:'rm-gas-wrap',itens:[
+   {t:'chips',id:'rm-gas-principal',num:'1.3.2',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-gas-desvio-nec',num:'1.3.3',lbl:'Necessário desvio das redes de gases medicinais?',ops:SNA},
+   {t:'chips',id:'rm-gas-desvio-pos',num:'1.3.4',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+  ]},
+  {t:'txt',id:'rm-gas-quais',num:'1.3.5',lbl:'Quais gases medicinais temos na área?',ph:'EX: O², AR COMPRIMIDO, VÁCUO'},
+ ]},
+ {hdr:'1.4 · Prevenção e Combate a Incêndio',itens:[
+  {t:'chips',id:'rm-ci-vesda',num:'1.4.1',lbl:'Existe sistema VESDA em operação para derivação para o novo equipamento?',ops:SNN},
+  {t:'chips',id:'rm-ci-spk-projeto',num:'1.4.2',lbl:'O projeto de bombeiros solicita combate a incêndio automático (SPK) na nova sala de exame de RM?',ops:SNA},
+  {t:'txt',id:'rm-ci-nivel',num:'1.4.3',lbl:'Classificação do nível de exigência de segurança da unidade',ph:'NÍVEL'},
+  {t:'chips',id:'rm-ci-spk-nivel',num:'1.4.4',lbl:'Pelo nível de segurança da unidade, o SPK é exigido na nova sala?',ops:SNA},
+  {t:'chips',id:'rm-ci-derivacao',num:'1.4.5',lbl:'O sistema de combate existente pode ser derivado para um sistema de pré-ação para a nova RM?',ops:SNA},
+  {t:'chips',id:'rm-ci-preacao',num:'1.4.6',lbl:'A unidade possui sistema de pré-ação existente?',ops:SNA},
+  {t:'chips',id:'rm-ci-redes',num:'1.4.7',lbl:'Existem redes de combate a incêndio sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-ci-wrap'}},
+  {t:'cond',id:'rm-ci-wrap',itens:[
+   {t:'chips',id:'rm-ci-principal',num:'1.4.8',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-ci-desvio-nec',num:'1.4.9',lbl:'Necessário desvio das redes de combate a incêndio?',ops:SNA},
+   {t:'chips',id:'rm-ci-desvio-pos',num:'1.4.10',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+  ]},
+ ]},
+ {hdr:'1.5 · Rede Hidráulica',itens:[
+  {t:'chips',id:'rm-hi-redes',num:'1.5.1',lbl:'Existem redes hidráulicas sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-hi-wrap'}},
+  {t:'cond',id:'rm-hi-wrap',itens:[
+   {t:'chips',id:'rm-hi-desvio',num:'1.5.2',lbl:'Necessário desvio das redes hidráulicas?',ops:SNA},
+  ]},
+ ]},
+ {hdr:'1.6 · Tubo Quench',itens:[
+  {t:'chips',id:'rm-tq-viavel',num:'1.6.1',lbl:'Tem local viável para a passagem do tubo quench?',hint:'evidenciar o trajeto por foto',ops:SNA,show:{'SIM':'rm-tq-sim-wrap','NÃO':'rm-tq-nao-wrap'}},
+  {t:'cond',id:'rm-tq-sim-wrap',itens:[
+   {t:'txt',id:'rm-tq-distancia',num:'1.6.2',lbl:'Distância do percurso até a saída externa (m)',ph:'EX: 18 M — VERIFICAR TRAJETO NO LOCAL'},
+   {t:'area',id:'rm-tq-trajeto',lbl:'Descrição do trajeto previsto',ph:'EX: SOBE PELO SHAFT DA SALA TÉCNICA, PERCORRE O ENTREFORRO DA CIRCULAÇÃO E SAI PELA FACHADA POSTERIOR...'},
+   {t:'chips',id:'rm-tq-reuso',num:'1.6.3',lbl:'Será utilizado o trajeto do tubo quench existente (no caso de troca de equipamento)?',ops:SNN},
+   {t:'chips',id:'rm-tq-espaco',num:'1.6.4',lbl:'No trajeto até a área externa, há espaço disponível para a passagem?',ops:SNA},
+  ]},
+  {t:'cond',id:'rm-tq-nao-wrap',itens:[
+   {t:'aviso',html:'💡 Sem trajeto viável para o tubo quench: avaliar equipamento <b>sem tubo quench</b> — tecnicamente possível, porém com custo significativamente maior. Registrar para a estimativa.'},
+   {t:'area',id:'rm-tq-alternativa',lbl:'Registro para a estimativa',ph:'AVALIAÇÃO DA ALTERNATIVA SEM TUBO QUENCH...'},
+  ]},
+  {t:'area',id:'rm-obs-inst',lbl:'Comentários — Instalações',ph:'OBSERVAÇÕES GERAIS DO BLOCO DE INSTALAÇÕES...'},
+ ]},
+]},
+{id:'rm-s4',eyebrow:'Viabilidade de RM · Etapa 04',titulo:'Interferências',desc:'Distâncias tendo como referência o isocentro do equipamento (0,5T, 1,5T e 3,0T).',pdfTag:'V4',pdfTitulo:'Interferências (referência: isocentro)',cards:[
+ {hdr:'2 · Interferências',preench:'rm-prf-interf',itens:[
+  {t:'chips',id:'rm-int-elev-tem',num:'2.1.1',lbl:'Tem elevador / plataforma elevatória próximo à sala de exames?',ops:SNA,show:{'SIM':'rm-int-elev-wrap'}},
+  {t:'cond',id:'rm-int-elev-wrap',itens:[
+   {t:'chips',id:'rm-int-elev-8m',lbl:'Está a menos de 8 m do isocentro?',hint:'mínimo: 8 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-elev'}},
+   {t:'alerta',id:'rm-al-elev',msg:'Elevador dentro do raio mínimo de 8 m do isocentro',ph:'EX: ISOCENTRO A 7 M DO ELEVADOR — VERIFICAR A INTERFERÊNCIA PELO TESTE DE EMI'},
+  ]},
+  {t:'sub',lbl:'2.2 · Passagem de veículos'},
+  {t:'chips',id:'rm-int-carro-tem',num:'2.2.1',lbl:'Há passagem de carros (aprox. 900 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-carro-wrap'}},
+  {t:'cond',id:'rm-int-carro-wrap',itens:[
+   {t:'chips',id:'rm-int-carro-55',lbl:'Está a menos de 5,5 m do isocentro?',hint:'mínimo: 5,5 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-carro'}},
+   {t:'alerta',id:'rm-al-carro',msg:'Passagem de carros dentro do raio mínimo de 5,5 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'chips',id:'rm-int-caminhao-tem',num:'2.2.2',lbl:'Há passagem de caminhões (aprox. 4.500 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-caminhao-wrap'}},
+  {t:'cond',id:'rm-int-caminhao-wrap',itens:[
+   {t:'chips',id:'rm-int-caminhao-65',lbl:'Está a menos de 6,5 m do isocentro?',hint:'mínimo: 6,5 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-caminhao'}},
+   {t:'alerta',id:'rm-al-caminhao',msg:'Passagem de caminhões dentro do raio mínimo de 6,5 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'chips',id:'rm-int-metro-tem',num:'2.2.3',lbl:'Tem trem / metrô próximo?',ops:SNA,show:{'SIM':'rm-int-metro-wrap'}},
+  {t:'cond',id:'rm-int-metro-wrap',itens:[
+   {t:'txt',id:'rm-int-metro-dist',lbl:'Qual a distância até o isocentro?',ph:'EX: 55 M'},
+   {t:'chips',id:'rm-int-metro-40',lbl:'Está a menos de 40 m?',hint:'mínimo: 40 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-metro'}},
+   {t:'alerta',id:'rm-al-metro',msg:'Trem/metrô dentro do raio mínimo de 40 m',ph:'EX: VERIFICAR INTERFERÊNCIA E VIBRAÇÃO NO TESTE DE EMI'},
+  ]},
+  {t:'sub',lbl:'2.3 · Equipamentos de refrigeração'},
+  {t:'chips',id:'rm-int-evap-tem',num:'2.3.1',lbl:'Evaporador da máquina de HVAC próximo?',ops:SNA,show:{'SIM':'rm-int-evap-wrap'}},
+  {t:'cond',id:'rm-int-evap-wrap',itens:[
+   {t:'chips',id:'rm-int-evap-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-evap'}},
+   {t:'alerta',id:'rm-al-evap',msg:'Evaporador de HVAC dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'chips',id:'rm-int-chiller-tem',num:'2.3.2',lbl:'Chiller do sistema de água de criogenia próximo?',ops:SNA,show:{'SIM':'rm-int-chiller-wrap'}},
+  {t:'cond',id:'rm-int-chiller-wrap',itens:[
+   {t:'chips',id:'rm-int-chiller-4m',lbl:'Está a menos de 4 m do isocentro?',hint:'mínimo: 4 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-chiller'}},
+   {t:'alerta',id:'rm-al-chiller',msg:'Chiller de criogenia dentro do raio mínimo de 4 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'chips',id:'rm-int-cond-tem',num:'2.3.3',lbl:'Condensadoras próximas?',ops:SNA,show:{'SIM':'rm-int-cond-wrap'}},
+  {t:'cond',id:'rm-int-cond-wrap',itens:[
+   {t:'chips',id:'rm-int-cond-8m',lbl:'Estão a menos de 8 m do isocentro?',hint:'mínimo: 8 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-cond'}},
+   {t:'alerta',id:'rm-al-cond',msg:'Condensadoras dentro do raio mínimo de 8 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'sub',lbl:'2.4 · Subestação / linhas de transmissão'},
+  {t:'chips',id:'rm-int-sub-tem',num:'2.4.1',lbl:'Existe subestação ou linha de transmissão de energia próxima?',ops:SNA,show:{'SIM':'rm-int-sub-wrap'}},
+  {t:'cond',id:'rm-int-sub-wrap',itens:[
+   {t:'chips',id:'rm-int-sub-20m',lbl:'Está a menos de 20 m do isocentro?',hint:'mínimo: 20 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-sub'}},
+   {t:'alerta',id:'rm-al-sub',msg:'Subestação/linha de transmissão dentro do raio mínimo de 20 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'sub',lbl:'2.5 · Outros equipamentos de imagem'},
+  {t:'chips',id:'rm-int-outra-rm-tem',num:'2.5.1',lbl:'Outro equipamento de ressonância magnética próximo?',ops:SNA,show:{'SIM':'rm-int-outra-rm-wrap'}},
+  {t:'cond',id:'rm-int-outra-rm-wrap',itens:[
+   {t:'chips',id:'rm-int-outra-rm-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-outra-rm'}},
+   {t:'alerta',id:'rm-al-outra-rm',msg:'Outra RM dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'chips',id:'rm-int-imagem-tem',num:'2.5.2',lbl:'Equipamento de imagem próximo (tomografia, raio-X, PET, acelerador linear)?',ops:SNA,show:{'SIM':'rm-int-imagem-wrap'}},
+  {t:'cond',id:'rm-int-imagem-wrap',itens:[
+   {t:'chips',id:'rm-int-imagem-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-imagem'}},
+   {t:'alerta',id:'rm-al-imagem',msg:'Equipamento de imagem dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
+  ]},
+  {t:'sub',lbl:'2.6 · Interferências estruturais'},
+  {t:'chips',id:'rm-int-reforco',num:'2.6.1',lbl:'Reforço de aço no piso / ferragem de laje a 1,25 m do centro do magneto? (massa menor que 100 kg/m²)',ops:SNA,show:{'SIM':'rm-al-reforco'}},
+  {t:'alerta',id:'rm-al-reforco',msg:'Ferragem/reforço estrutural relevante próximo ao magneto',ph:'AVALIAR IMPACTO DE CUSTO E VIABILIDADE — CONSULTOR ESTRUTURAL...'},
+  {t:'sub',lbl:'2.7 · Laje inferior'},
+  {t:'chips',id:'rm-laje-inf-tem',num:'2.7.1',lbl:'Tem pavimento inferior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-inf-wrap'}},
+  {t:'cond',id:'rm-laje-inf-wrap',itens:[
+   {t:'txt',id:'rm-laje-inf-ocup',num:'2.7.2',lbl:'Qual a ocupação do pavimento inferior?',ph:'EX: CENTRO CIRÚRGICO, ESTACIONAMENTO, UTI...'},
+   {t:'num',id:'rm-laje-inf-pd',num:'2.7.3',lbl:'Pé-direito do piso inferior — piso a fundo de laje (m)',ph:'EX: 2.80',alerta:{min:2.5,id:'rm-al-pdinf',msg:'Pé-direito do pavimento inferior abaixo do mínimo de 2,50 m',ph:'JUSTIFICATIVA / TRATATIVA...'}},
+   {t:'chips',id:'rm-laje-inf-remoto',num:'2.7.4',lbl:'Necessária instalação de piso remoto?',ops:SNA},
+   {t:'chips',id:'rm-laje-inf-reman',num:'2.7.5',lbl:'Necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento inferior?',ops:SNA,show:{'SIM':'rm-laje-inf-reman-wrap'}},
+   {t:'cond',id:'rm-laje-inf-reman-wrap',itens:[
+    {t:'area',id:'rm-laje-inf-reman-desc',lbl:'O que precisa ser remanejado / readequado?',ph:'EX: REFORÇO ESTRUTURAL DA LAJE, INTERFERÊNCIA DA BLINDAGEM DA RM COM O AMBIENTE INFERIOR, DESVIO DE INSTALAÇÕES...'},
+   ]},
+   {t:'chips',id:'rm-laje-inf-reforco',num:'2.7.6',lbl:'Necessário reforço estrutural?',ops:SNA},
+   {t:'chips',id:'rm-laje-inf-tipo',num:'2.7.7',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA']},
+   {t:'txt',id:'rm-laje-inf-esp',num:'2.7.8',lbl:'Espessura da laje',ph:'CM'},
+  ]},
+  {t:'sub',lbl:'2.8 · Laje superior'},
+  {t:'chips',id:'rm-laje-sup-tem',num:'2.8.1',lbl:'Tem ocupação no pavimento superior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-sup-wrap'}},
+  {t:'cond',id:'rm-laje-sup-wrap',itens:[
+   {t:'txt',id:'rm-laje-sup-ocup',num:'2.8.2',lbl:'Qual a ocupação do pavimento superior?',ph:'EX: INTERNAÇÃO, ÁREA TÉCNICA, COBERTURA...'},
+   {t:'chips',id:'rm-laje-sup-reman',num:'2.8.3',lbl:'Necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento superior?',ops:SNA,show:{'SIM':'rm-laje-sup-reman-wrap'}},
+   {t:'cond',id:'rm-laje-sup-reman-wrap',itens:[
+    {t:'area',id:'rm-laje-sup-reman-desc',lbl:'O que precisa ser remanejado / readequado?',ph:'EX: DESVIO DE REDES DE ÁGUA GELADA E DUTOS, READEQUAÇÃO DE ÁREA OCUPADA...'},
+   ]},
+   {t:'chips',id:'rm-laje-sup-tipo',num:'2.8.4',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA']},
+   {t:'txt',id:'rm-laje-sup-esp',num:'2.8.5',lbl:'Espessura da laje',ph:'CM'},
+  ]},
+  {t:'area',id:'rm-obs-interf',lbl:'Comentários — Interferências',ph:'OBSERVAÇÕES GERAIS DO BLOCO DE INTERFERÊNCIAS...'},
+ ]},
+]},
+{id:'rm-s5',eyebrow:'Viabilidade de RM · Etapa 05',titulo:'Espaço Físico',pdfTag:'V5',pdfTitulo:'Espaço Físico',cards:[
+ {hdr:'3.1 · Localização e Espaço Físico',preench:'rm-prf-esp',itens:[
+  {t:'chips',id:'rm-esp-levantamento',num:'3.1.1',lbl:'É necessário contratar a atualização do levantamento arquitetônico da unidade para iniciar o estudo da solução?',ops:SNA},
+  {t:'chips',id:'rm-esp-plano',num:'3.1.2',lbl:'A unidade tem Plano Diretor em andamento?',ops:SNA},
+  {t:'txt',id:'rm-esp-pav',num:'3.1.3',lbl:'Qual pavimento será instalado o equipamento?',ph:'EX: 1º PAVIMENTO'},
+  {t:'chips',id:'rm-esp-vigas',num:'3.1.4',lbl:'Temos vigas na posição da sala de exames sugerida?',hint:'se sim, fazer cadastramento — podem exigir desvios de instalações',ops:SNA},
+  {t:'num',id:'rm-esp-pd-viga',num:'3.1.5',lbl:'Pé-direito da sala — piso a fundo de viga (m)',ph:'EX: 2.55'},
+  {t:'num',id:'rm-esp-pd-laje',num:'3.1.6',lbl:'Pé-direito da sala — piso a fundo de laje (m)',ph:'EX: 3.10'},
+  {t:'num',id:'rm-esp-pd-forro',num:'3.1.7',lbl:'Pé-direito da sala — piso a forro (m)',ph:'EX: 2.60'},
+  {t:'chips',id:'rm-esp-vedacao',num:'3.1.8',lbl:'Tipo de vedação existente',excl:1,ops:['ALVENARIA','DRYWALL','OUTRA']},
+  {t:'chips',id:'rm-esp-vedacao-mantida',num:'3.1.9',lbl:'A vedação existente será mantida?',ops:SNA},
+  {t:'chips',id:'rm-esp-reforco-madeira',num:'3.1.10',lbl:'Necessário reforço em madeira nas paredes existentes?',ops:SNA},
+  {t:'txt',id:'rm-esp-contrapiso',num:'3.1.11',lbl:'Altura do contrapiso existente',ph:'CM'},
+  {t:'chips',id:'rm-esp-nova-laje',num:'3.1.12',lbl:'Necessária construção de nova laje?',ops:SNA},
+  {t:'chips',id:'rm-esp-melhor-local',num:'3.1.13',lbl:'O local escolhido é o melhor para implantar o equipamento?',ops:SNA,show:{'NÃO':'rm-esp-outro-wrap'}},
+  {t:'cond',id:'rm-esp-outro-wrap',itens:[
+   {t:'txt',id:'rm-esp-outro-local',lbl:'Qual o outro local?',ph:'DESCREVA A ALTERNATIVA'},
+  ]},
+ ]},
+ {hdr:'3.2 · Áreas de Apoio — a unidade tem área suficiente para o novo equipamento?',itens:[
+  {t:'chips',id:'rm-ap-dml',lbl:'DML',ops:SNA},
+  {t:'chips',id:'rm-ap-vest',lbl:'Vestiários',ops:SNA},
+  {t:'chips',id:'rm-ap-expurgo',lbl:'Expurgo',ops:SNA},
+  {t:'chips',id:'rm-ap-espera',lbl:'Esperas',ops:SNA},
+  {t:'chips',id:'rm-ap-rpa',lbl:'RPA',ops:SNA},
+  {t:'chips',id:'rm-ap-preparo',lbl:'Preparo',ops:SNA},
+  {t:'chips',id:'rm-ap-demais',lbl:'Demais áreas de apoio',ops:SNA},
+ ]},
+ {hdr:'3.3 · Entrada do Equipamento',itens:[
+  {t:'chips',id:'rm-ent-facil',num:'3.3.1',lbl:'A unidade tem facilidade para a entrada do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-rm-exist',num:'3.3.2',lbl:'A unidade possui equipamento de RM existente?',ops:['SIM','NÃO'],show:{'SIM':'rm-ent-caminho-wrap'}},
+  {t:'cond',id:'rm-ent-caminho-wrap',itens:[
+   {t:'txt',id:'rm-ent-caminho',lbl:'Qual foi o caminho para a entrada desse equipamento?',ph:'DESCREVA O TRAJETO USADO'},
+  ]},
+  {t:'chips',id:'rm-ent-avaliado',num:'3.3.3',lbl:'Foi avaliado o melhor caminho para a entrada do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-escoramento',num:'3.3.4',lbl:'Será necessário escoramento no pavimento inferior?',ops:SNA,show:{'SIM':'rm-ent-escoramento-wrap'}},
+  {t:'cond',id:'rm-ent-escoramento-wrap',itens:[
+   {t:'chips',id:'rm-ent-escoramento-pos',lbl:'É possível executar o escoramento no andar inferior?',ops:SNA},
+  ]},
+  {t:'num',id:'rm-ent-pd',num:'3.3.5',lbl:'Pé-direito da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,50 m',ph:'EX: 2.60',alerta:{min:2.5,id:'rm-al-entpd',msg:'Pé-direito do trajeto de entrada abaixo do mínimo de 2,50 m',ph:'EX: QUEBRAR FORRO / AVALIAR TRAJETO ALTERNATIVO...'}},
+  {t:'chips',id:'rm-ent-forro',num:'3.3.6',lbl:'Será necessário quebrar forro no trajeto de entrada?',ops:SNA},
+  {t:'num',id:'rm-ent-larg',num:'3.3.7',lbl:'Largura da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,20 m em trecho reto · 2,50 m com curva',ph:'EX: 2.30',alerta:{min:2.2,id:'rm-al-entlarg',msg:'Largura do trajeto de entrada abaixo do mínimo de 2,20 m',ph:'EX: QUEBRAR PAREDES / TRAJETO ALTERNATIVO / AVALIAR IÇAMENTO...'}},
+  {t:'chips',id:'rm-ent-larg-ok',num:'3.3.8',lbl:'As larguras dos corredores atendem à passagem?',ops:SNA},
+  {t:'chips',id:'rm-ent-paredes',num:'3.3.9',lbl:'Será necessário quebrar paredes?',ops:SNA},
+  {t:'chips',id:'rm-ent-desmontar',num:'3.3.10',lbl:'Será necessário desmontar elementos que dificultem a passagem (portas, catracas, marcenarias)?',ops:SNA},
+  {t:'chips',id:'rm-ent-icamento',num:'3.3.11',lbl:'Será necessário içamento do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-rua',num:'3.3.12',lbl:'Será necessário fechamento de rua?',ops:SNA},
+  {t:'chips',id:'rm-ent-fds',num:'3.3.13',lbl:'Será necessário executar aos fins de semana?',ops:SNA},
+  {t:'chips',id:'rm-ent-noturno',num:'3.3.14',lbl:'Será necessário executar em horário noturno?',ops:SNA},
+  {t:'chips',id:'rm-ent-fachada',num:'3.3.15',lbl:'Será necessária abertura de fachada para a entrada do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-ancoragem',num:'3.3.16',lbl:'Será necessária instalação de pontos de ancoragem?',ops:SNA},
+  {t:'chips',id:'rm-ent-desmont-equip',num:'3.3.17',lbl:'Será necessária desmontagem de equipamentos para a passagem?',ops:SNA},
+  {t:'txt',id:'rm-ent-salas',num:'3.3.18',lbl:'Quais salas terão intervenção para a passagem?',ph:'LISTE AS SALAS'},
+ ]},
+ {hdr:'3.4 · Faseamento e Aproveitamento',itens:[
+  {t:'chips',id:'rm-fase',num:'3.4.1',lbl:'Será necessário faseamento da obra?',hint:'remanejamentos e áreas em operação costumam exigir etapas',ops:SNA,show:{'SIM':'rm-fase-wrap'}},
+  {t:'cond',id:'rm-fase-wrap',itens:[
+   {t:'area',id:'rm-fase-desc',lbl:'Descreva o faseamento previsto',ph:'EX: FASE 1 — REMANEJAR ÁREA DO PAVIMENTO INFERIOR; FASE 2 — REFORÇO ESTRUTURAL; FASE 3 — OBRA DA SALA DE RM...'},
+  ]},
+  {t:'chips',id:'rm-aprov',num:'3.4.2',lbl:'Há elementos aproveitáveis / remanejáveis no remanejamento (visor, porta, bancadas...)?',ops:SNA,show:{'SIM':'rm-aprov-wrap'}},
+  {t:'cond',id:'rm-aprov-wrap',itens:[
+   {t:'area',id:'rm-aprov-desc',lbl:'Quais elementos e para onde?',ph:'EX: VISOR DA SALA DE COMANDO REMANEJÁVEL; PORTA APROVEITÁVEL NA NOVA POSIÇÃO; BANCADA REALOCADA PARA O PREPARO...'},
+  ]},
+  {t:'area',id:'rm-obs-esp',lbl:'Comentários — Espaço Físico',ph:'OBSERVAÇÕES GERAIS DO BLOCO...'},
+ ]},
+]},
+{id:'rm-s6',eyebrow:'Viabilidade de RM · Etapa 06',titulo:'Custo',desc:'Os valores vivem no Relatório Técnico de Estimativa — aqui só a verificação.',pdfTag:'V6',pdfTitulo:'Custo',cards:[
+ {hdr:'4 · Custo',preench:'rm-prf-custo',itens:[
+  {t:'chips',id:'rm-custo-estimativa',num:'4.1',lbl:'Relatório Técnico de Estimativa elaborado?',excl:1,ops:['SIM','NÃO','EM ANDAMENTO']},
+  {t:'chips',id:'rm-custo-extras',num:'4.2',lbl:'As intervenções extras identificadas neste checklist foram consideradas na estimativa?',ops:SNA},
+  {t:'area',id:'rm-obs-custo',lbl:'Comentários — Custo',ph:'OBSERVAÇÕES...'},
+ ]},
+]},
+];
+
+/* ── Monta as seções do módulo RM no DOM (uma única vez, na carga) ── */
+function montarItemRM(item){
+  const num=item.num?`<span class="rm-num">${item.num}</span>`:'';
+  const hint=item.hint?` <span class="rm-hint">(${item.hint})</span>`:'';
+  if(item.t==='sub')return `<div class="rm-sub-hdr">${item.lbl}</div>`;
+  if(item.t==='aviso')return `<div class="rm-aviso">${item.html}</div>`;
+  if(item.t==='alerta')return `<div class="cond-field rm-alerta" id="${item.id}" data-msg="${item.msg}" style="display:none"><div class="rm-alerta-box"><div class="rm-alerta-tit">⚠ Impedimento potencial — ${item.msg}</div><textarea id="${item.id}-just" rows="2" placeholder="${item.ph||'JUSTIFICATIVA / TRATATIVA...'}" spellcheck="true" lang="pt-BR"></textarea></div></div>`;
+  if(item.t==='cond')return `<div class="cond-field" id="${item.id}" style="display:none">${item.itens.map(montarItemRM).join('')}</div>`;
+  if(item.t==='chips'){
+    const chips=item.ops.map(op=>{
+      const attrs=[`data-g="${item.id}"`];
+      if(item.excl)attrs.push('data-excl="1"');
+      if(item.show&&item.show[op])attrs.push(`data-show="${item.show[op]}"`);
+      return `<div class="mchip" ${attrs.join(' ')}>${op}</div>`;
+    }).join('');
+    return `<div class="mrow"><div class="mrow-label">${num}${item.lbl}${hint}</div><div class="mchips">${chips}</div></div>`;
+  }
+  if(item.t==='txt'||item.t==='num'||item.t==='data'){
+    const tipo=item.t==='num'?'number':(item.t==='data'?'date':'text');
+    const step=item.t==='num'?' step="0.01"':'';
+    const extra=item.projLbl?` oninput="atualizarProjLbl()"`:'';
+    const al=item.alerta?` oninput="alertaNumRM(this,'${item.alerta.id}',${item.alerta.min})"`:'';
+    let html=`<div class="field"><label>${item.num?item.num+' · ':''}${item.lbl}${item.hint?` <span class="rm-hint">(${item.hint})</span>`:''}</label><input type="${tipo}"${step} id="${item.id}" placeholder="${item.ph||''}"${extra}${al}></div>`;
+    if(item.alerta)html+=`<div class="cond-field rm-alerta" id="${item.alerta.id}" data-msg="${item.alerta.msg}" style="display:none"><div class="rm-alerta-box"><div class="rm-alerta-tit">⚠ Impedimento potencial — ${item.alerta.msg}</div><textarea id="${item.alerta.id}-just" rows="2" placeholder="${item.alerta.ph||'JUSTIFICATIVA / TRATATIVA...'}" spellcheck="true" lang="pt-BR"></textarea></div></div>`;
+    return html;
+  }
+  if(item.t==='area')return `<div class="field"><label>${item.num?item.num+' · ':''}${item.lbl}</label><textarea id="${item.id}" rows="2" placeholder="${item.ph||''}" spellcheck="true" lang="pt-BR"></textarea></div>`;
+  return '';
+}
+function montarModuloRM(){
+  const cont=document.getElementById('rm-container');
+  if(!cont)return;
+  let html='';
+  RM_DEF.forEach(sec=>{
+    html+=`<div class="section" id="${sec.id}">
+      <div class="sec-eyebrow">${sec.eyebrow}</div>
+      <div class="sec-title">${sec.titulo}</div>
+      ${sec.desc?`<div class="sec-desc">${sec.desc}</div>`:''}
+      ${sec.cards.map(card=>`<div class="card">
+        <div class="card-header">${card.hdr}</div>
+        <div class="card-body">
+          ${card.preench?`<div class="field"><label>Preenchido por</label><input type="text" id="${card.preench}" placeholder="NOME DE QUEM RESPONDEU ESTE BLOCO"></div>`:''}
+          ${card.itens.map(montarItemRM).join('')}
+        </div>
+      </div>`).join('')}
+    </div>`;
+  });
+  // Seção de fotos do modo RM (mesma galeria do relatório; legendas rápidas específicas de RM)
+  html+=`<div class="section" id="rm-s7">
+    <div class="sec-eyebrow">Viabilidade de RM · Etapa 07</div>
+    <div class="sec-title">Registro Fotográfico</div>
+    <div class="rm-aviso" style="margin-bottom:1rem">📷 <b>Evidências desta vistoria:</b> painel elétrico que alimentará o equipamento · disjuntores disponíveis · local proposto para a sala · trajeto de entrada do equipamento · local do chiller / casa de máquinas · trajeto do tubo quench. Fotos na horizontal.</div>
+    <div id="fotos-lista-rm"></div>
+    <div style="display:flex;gap:10px">
+      <button class="add-foto-btn" style="flex:1" onclick="addFoto('camera')"><i class="ti ti-camera" style="font-size:20px"></i> Tirar foto</button>
+      <button class="add-foto-btn" style="flex:1" onclick="addFoto('upload')"><i class="ti ti-upload" style="font-size:20px"></i> Upload</button>
+    </div>
+  </div>`;
+  // Seção de resultado
+  html+=`<div class="section" id="rm-s8">
+    <div class="sec-eyebrow">Concluído</div>
+    <div class="sec-title">Resultado da Avaliação</div>
+    <div id="rm-alertas-resumo"></div>
+    <div class="card">
+      <div class="card-header">Veredito do profissional</div>
+      <div class="card-body">
+        <div class="mrow">
+          <div class="mrow-label">É possível implantar o equipamento?</div>
+          <div class="mchips">
+            <div class="mchip ver-sim" data-g="rm-veredito" data-excl="1">SIM</div>
+            <div class="mchip ver-ress" data-g="rm-veredito" data-excl="1" data-show="rm-just-ress-wrap">SIM COM RESSALVAS</div>
+            <div class="mchip ver-nao" data-g="rm-veredito" data-excl="1" data-show="rm-just-nao-wrap">NÃO</div>
+          </div>
+        </div>
+        <div class="cond-field" id="rm-just-ress-wrap" style="display:none">
+          <div class="field"><label>Justificativa das ressalvas</label><textarea id="rm-just-ress" rows="2" placeholder="EX: ISOCENTRO A 7 M DO ELEVADOR — NECESSÁRIO VERIFICAR A INTERFERÊNCIA PELO TESTE DE EMI" spellcheck="true" lang="pt-BR"></textarea></div>
+        </div>
+        <div class="cond-field" id="rm-just-nao-wrap" style="display:none">
+          <div class="field"><label>Justificativa da negativa</label><textarea id="rm-just-nao" rows="2" placeholder="EX: PÉ-DIREITO DE 2,30 M NO TRAJETO DE ENTRADA, ABAIXO DO MÍNIMO, SEM ALTERNATIVA DE ACESSO" spellcheck="true" lang="pt-BR"></textarea></div>
+        </div>
+        <div class="mrow">
+          <div class="mrow-label">Nível de criticidade da implantação</div>
+          <div class="mchips">
+            <div class="mchip" data-g="rm-criticidade" data-excl="1">BAIXO</div>
+            <div class="mchip" data-g="rm-criticidade" data-excl="1">MÉDIO</div>
+            <div class="mchip" data-g="rm-criticidade" data-excl="1">ALTO</div>
+          </div>
+        </div>
+        <div class="field"><label>Parecer final</label><textarea id="rm-parecer" rows="3" placeholder="SÍNTESE DA AVALIAÇÃO PARA O RELATÓRIO..." spellcheck="true" lang="pt-BR"></textarea></div>
+        <button class="btn-export-inline" onclick="gerarPDFRM()">📄 Gerar PDF — Viabilidade de RM</button>
+      </div>
+    </div>
+  </div>`;
+  cont.innerHTML=html;
+}
+
+/* ── Alertas numéricos (pé-direito e largura abaixo do mínimo) ── */
+const RM_ALERTAS_NUM=[
+  {inp:'rm-laje-inf-pd',al:'rm-al-pdinf',min:2.5},
+  {inp:'rm-ent-pd',al:'rm-al-entpd',min:2.5},
+  {inp:'rm-ent-larg',al:'rm-al-entlarg',min:2.2},
+];
+function alertaNumRM(inp,alvoId,min){
+  const alvo=document.getElementById(alvoId);
+  if(!alvo)return;
+  const v=parseFloat(String(inp.value).replace(',','.'));
+  const ativo=!isNaN(v)&&v<min;
+  alvo.style.display=ativo?'block':'none';
+  if(!ativo){const ta=alvo.querySelector('textarea');if(ta)ta.value='';}
+}
+function atualizarAlertasNumericosRM(){
+  RM_ALERTAS_NUM.forEach(a=>{
+    const inp=document.getElementById(a.inp);
+    if(inp)alertaNumRM(inp,a.al,a.min);
+  });
+}
+
+/* ── Painel de alertas na seção Resultado ── */
+function alertasAtivosRM(){
+  return [...document.querySelectorAll('#rm-container .rm-alerta')]
+    .filter(el=>el.style.display!=='none')
+    .map(el=>({msg:el.dataset.msg,just:(el.querySelector('textarea')||{}).value||''}));
+}
+function buildResultadoRM(){
+  collectText();
+  const alertas=alertasAtivosRM();
+  const box=document.getElementById('rm-alertas-resumo');
+  if(!alertas.length){
+    box.innerHTML=`<div class="card"><div class="card-body"><div style="font-size:12.5px;color:#1a7c40;font-weight:700;background:#e6f6eb;padding:10px 12px;border-radius:8px;border-left:3px solid #1a7c40">✓ NENHUM IMPEDIMENTO POTENCIAL SINALIZADO NESTA AVALIAÇÃO.</div></div></div>`;
+  }else{
+    box.innerHTML=`<div class="card"><div class="card-header" style="color:#dc2626">⚠ Impedimentos potenciais sinalizados (${alertas.length})</div><div class="card-body">${alertas.map(a=>`<div class="rm-alerta-box" style="margin-top:0"><div class="rm-alerta-tit">${a.msg}</div><div style="font-size:12px;color:#1a2740;text-transform:uppercase;line-height:1.5">${a.just||'<i style="color:#94a3b8">SEM JUSTIFICATIVA REGISTRADA — PREENCHA NO ITEM CORRESPONDENTE</i>'}</div></div>`).join('')}</div></div>`;
+  }
+}
+
+/* ── Texto do contexto para capa e relatório ── */
+function contextoRM(R){
+  const tip=R['rm-tipologia']||'';
+  if(tip==='ÁREA HOSPITAL')return 'IMPLANTAÇÃO EM HOSPITAL'+(R['rm-ctx-hospital']?' — '+R['rm-ctx-hospital']:'');
+  if(tip==='NOVA CONSTRUÇÃO')return 'NOVA CONSTRUÇÃO'+(R['rm-ctx-nova-nome']?' — '+R['rm-ctx-nova-nome']:'');
+  if(tip==='UNIDADE EXTERNA'||tip==='LOJA COMERCIAL'){
+    let s=tip;
+    if(R['rm-ctx-situacao'])s+=' · '+R['rm-ctx-situacao'];
+    if(R['rm-ctx-imovel-nome'])s+=' — '+R['rm-ctx-imovel-nome'];
+    if(R['rm-ctx-uso-atual'])s+=' (USO ATUAL: '+R['rm-ctx-uso-atual']+')';
+    return s;
+  }
+  return tip||'—';
+}
+
+/* ── PDF do Checklist de Viabilidade de RM ── */
+function linhasPdfRM(itens,R){
+  const tagMap={'SIM':'tag-sim','NÃO':'tag-nao','A VERIFICAR':'tag-av','EM ANDAMENTO':'tag-av'};
+  let html='';
+  itens.forEach(item=>{
+    if(item.t==='sub'){html+=`</table><div class="sbt" style="margin-top:14px">${item.lbl}</div><table>`;return;}
+    if(item.t==='aviso')return;
+    if(item.t==='cond'){html+=linhasPdfRM(item.itens,R);return;}
+    if(item.t==='alerta'){
+      const el=document.getElementById(item.id);
+      if(el&&el.style.display!=='none'){
+        const just=R[item.id+'-just']||'';
+        html+=`</table><div class="ai" style="border-left-color:#dc2626;margin:8px 0"><div class="ail ail-neg">⚠ Impedimento potencial — ${item.msg}</div><div class="ait">${just||'SEM JUSTIFICATIVA REGISTRADA'}</div></div><table>`;
+      }
+      return;
+    }
+    const v=R[item.id];
+    const vazio=v===undefined||v===''||(Array.isArray(v)&&!v.length);
+    if(vazio)return;
+    const vs=Array.isArray(v)?v.join(' / '):String(v);
+    const display=tagMap[vs]?`<span class="${tagMap[vs]}">${vs}</span>`:vs;
+    const lbl=(item.num?item.num+' · ':'')+item.lbl;
+    if(item.t==='area'){
+      html+=`</table><div class="sbt" style="margin-top:10px">${lbl}</div><p class="tb" style="margin-top:4px">${vs}</p><table>`;
+    }else{
+      html+=`<tr><td class="lbl">${lbl}</td><td class="val">${display}</td></tr>`;
+    }
+    if(item.alerta){
+      const el=document.getElementById(item.alerta.id);
+      if(el&&el.style.display!=='none'){
+        const just=R[item.alerta.id+'-just']||'';
+        html+=`</table><div class="ai" style="border-left-color:#dc2626;margin:8px 0"><div class="ail ail-neg">⚠ Impedimento potencial — ${item.alerta.msg}</div><div class="ait">${just||'SEM JUSTIFICATIVA REGISTRADA'}</div></div><table>`;
+      }
+    }
+  });
+  return html;
+}
+function gerarPDFRM(){
+  try{
+    collectText();
+    const R=D;
+    const dataf=R['rm-data']?new Date(R['rm-data']+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+    const veredito=R['rm-veredito']||'';
+    const crit=R['rm-criticidade']||'';
+    const corVer=veredito==='SIM'?'abox-pouca':(veredito==='SIM COM RESSALVAS'?'abox-media':(veredito==='NÃO'?'abox-alta':''));
+    const alertas=alertasAtivosRM();
+    let fotosH='';fotos.forEach(f=>{fotosH+=`<div class="fi"><img src="${f.dataUrl}" class="fp"><div class="fl">${f.label||'SEM LEGENDA'}</div></div>`;});
+
+    let html2=`<div class="capa"><button class="close-btn" onclick="document.getElementById('pdf-overlay').style.display='none';var n=document.querySelector('.btn-nuvem-float');if(n)n.style.display='';">← Voltar</button><div class="pdf-actions"><button class="print-btn" id="btn-salvar-pdf" onclick="salvarPDF()">💾 Salvar PDF</button></div><div class="print-hint">Antes de salvar: nas configurações de impressão, desmarque "Cabeçalhos e rodapés" e escolha destino "Salvar como PDF".</div><div class="cap-mark">D'OR 360</div><div class="cap-logo-wrap"><div class="cap-logo">REDE <span>D'</span>OR</div><div class="cap-logo-sub">Projetos Especiais</div></div>
+<div class="cap-tag">Viabilidade de Implantação — Ressonância Magnética</div><div class="cap-titulo">${(R['rm-nome']||'VIABILIDADE DE RM').toUpperCase()}</div>
+<div class="cap-sub">${R['rm-endereco']||contextoRM(R)}</div>
+<div class="cap-dados">
+  <div class="cap-d"><div class="cap-dl">Data</div><div class="cap-dv">${dataf}</div></div>
+  <div class="cap-d"><div class="cap-dl">Contexto</div><div class="cap-dv">${contextoRM(R)}</div></div>
+  <div class="cap-d"><div class="cap-dl">Equipamento</div><div class="cap-dv">${R['rm-equip-desc']?(R['rm-equip-status']?R['rm-equip-status']+' · ':'')+R['rm-equip-desc']:'—'}</div></div>
+  <div class="cap-d"><div class="cap-dl">É possível implantar?</div><div class="cap-dv">${veredito||'—'}${crit?' · CRITICIDADE '+crit:''}</div></div>
+</div></div>`;
+
+    RM_DEF.forEach(sec=>{
+      let corpo='';
+      sec.cards.forEach(card=>{
+        let linhas=linhasPdfRM(card.itens,R);
+        // remove tabelas vazias geradas pelas quebras
+        linhas=('<table>'+linhas+'</table>').replace(/<table>\s*<\/table>/g,'');
+        const prf=card.preench&&R[card.preench]?`<tr><td class="lbl">Preenchido por</td><td class="val">${R[card.preench]}</td></tr>`:'';
+        if(!linhas&&!prf)return;
+        corpo+=`<div class="sb"><div class="sbt">${card.hdr}</div>${prf?'<table>'+prf+'</table>':''}${linhas}</div>`;
+      });
+      if(!corpo)return;
+      html2+=`<div class="pg pg-nova-folha"><div class="pg-hdr"><div><div class="pg-tag">${sec.pdfTag}</div><div class="pg-title">${sec.pdfTitulo}</div></div><div class="pg-proj">${R['rm-nome']||'—'}</div></div>${corpo}</div>`;
+    });
+
+    // Página de resultado
+    let resAlertas='';
+    if(alertas.length){
+      resAlertas=alertas.map(a=>`<div class="ai" style="border-left-color:#dc2626"><div class="ail ail-neg">⚠ ${a.msg}</div><div class="ait">${a.just||'SEM JUSTIFICATIVA REGISTRADA'}</div></div>`).join('');
+    }else{
+      resAlertas=`<div class="ai"><div class="ail ail-pos">✓ Nenhum impedimento potencial sinalizado</div></div>`;
+    }
+    html2+=`<div class="pg pg-nova-folha"><div class="pg-hdr"><div><div class="pg-tag">V7</div><div class="pg-title">Resultado da Avaliação</div></div><div class="pg-proj">${R['rm-nome']||'—'}</div></div>
+    ${veredito?`<div class="abox ${corVer}"><div class="abl">É possível implantar o equipamento?</div><div class="abv">${veredito}${crit?' — CRITICIDADE '+crit:''}</div></div>`:''}
+    ${R['rm-just-ress']?`<div class="sb"><div class="sbt">Justificativa das Ressalvas</div><p class="tb">${R['rm-just-ress']}</p></div>`:''}
+    ${R['rm-just-nao']?`<div class="sb"><div class="sbt">Justificativa da Negativa</div><p class="tb">${R['rm-just-nao']}</p></div>`:''}
+    <div class="sb"><div class="sbt">Impedimentos Potenciais Sinalizados</div><div class="agrid">${resAlertas}</div></div>
+    ${R['rm-parecer']?`<div class="sb"><div class="sbt">Parecer Final</div><p class="tb">${R['rm-parecer']}</p></div>`:''}</div>`;
+
+    if(fotosH)html2+=`<div class="pg pg-nova-folha"><div class="pg-hdr"><div><div class="pg-tag">V8</div><div class="pg-title">Registro Fotográfico</div></div><div class="pg-proj">${R['rm-nome']||'—'}</div></div><div class="fg">${fotosH}</div></div>`;
+
+    let styleTag=document.getElementById('pdf-report-style');
+    if(!styleTag){
+      styleTag=document.createElement('style');
+      styleTag.id='pdf-report-style';
+      document.head.appendChild(styleTag);
+    }
+    styleTag.textContent=PCSS_PDF;
+    document.getElementById('pdf-overlay-content').innerHTML=html2;
+    const ov=document.getElementById('pdf-overlay');
+    ov.dataset.tipo='rm';
+    ov.style.display='block';
+    const nuvemBtn=document.querySelector('.btn-nuvem-float');
+    if(nuvemBtn)nuvemBtn.style.display='none';
+    window.scrollTo(0,0);
+  }catch(err){
+    console.error('Erro ao gerar o relatório de RM:',err);
+    alert('Erro ao gerar o relatório. Tente novamente.');
+  }
+}
+
+/* ── Inicialização do módulo RM ── */
+montarModuloRM();
+aplicarMultiSelect();
+if(typeof ativarSpellcheck==='function')try{ativarSpellcheck();}catch(e){}
+
+/* Fluxo de entrada: senha (se configurada) → escolha do modo */
+(function iniciarAcesso(){
+  const temSenha=SENHA_HASH&&localStorage.getItem(ACESSO_KEY)!==SENHA_HASH;
+  if(temSenha){
+    document.getElementById('tela-senha').style.display='flex';
+  }else{
+    document.getElementById('modo-home').style.display='flex';
+  }
+})();
+
 </script>
 </body>
 </html>
