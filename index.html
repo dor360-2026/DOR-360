@@ -1027,14 +1027,28 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
 
 </div><!-- /app -->
 
-<!-- Tela de senha de acesso (ativa somente quando SENHA_HASH estiver definida) -->
-<div class="tela-senha" id="tela-senha" style="display:none">
+<!-- Tela de acesso: login individual (Supabase Auth) e definição de senha via convite/recuperação -->
+<div class="tela-senha" id="tela-acesso" style="display:none">
   <div class="mh-brand">REDE D'OR · PROJETOS ESPECIAIS</div>
   <div class="mh-logo">D'OR 360</div>
-  <div class="mh-sub">Digite a senha de acesso da equipe</div>
-  <input type="password" id="senha-input" placeholder="••••••" onkeydown="if(event.key==='Enter')verificarSenha()">
-  <div class="ts-erro" id="senha-erro"></div>
-  <button class="btn-next" style="max-width:300px" onclick="verificarSenha()">Entrar</button>
+  <!-- Formulário de login -->
+  <div id="form-login" style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+    <div class="mh-sub">Acesso restrito à equipe autorizada</div>
+    <input type="email" id="login-email" placeholder="seu.nome@rededor.com.br" style="max-width:320px;text-align:center;letter-spacing:0;text-transform:lowercase" autocomplete="username">
+    <input type="password" id="login-senha" placeholder="Senha" style="max-width:320px;text-align:center;letter-spacing:.2em" autocomplete="current-password" onkeydown="if(event.key==='Enter')fazerLogin()">
+    <div class="ts-erro" id="login-erro"></div>
+    <button class="btn-next" style="max-width:320px" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <button style="background:none;border:none;color:#71C5E8;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline" onclick="esqueciSenha()">Esqueci minha senha</button>
+    <div style="font-size:10px;color:rgba(255,255,255,.5);max-width:320px;text-align:center;line-height:1.5">Dados de acesso e relatórios tratados conforme a LGPD, restritos à equipe de Projetos Especiais.</div>
+  </div>
+  <!-- Formulário de definição de senha (convite ou recuperação) -->
+  <div id="form-definir" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
+    <div class="mh-sub" id="definir-titulo">Bem-vindo(a)! Defina a sua senha de acesso</div>
+    <input type="password" id="nova-senha-1" placeholder="Nova senha (mín. 8 caracteres)" style="max-width:320px;text-align:center" autocomplete="new-password">
+    <input type="password" id="nova-senha-2" placeholder="Repita a nova senha" style="max-width:320px;text-align:center" autocomplete="new-password" onkeydown="if(event.key==='Enter')definirSenha()">
+    <div class="ts-erro" id="definir-erro"></div>
+    <button class="btn-next" style="max-width:320px" id="btn-definir" onclick="definirSenha()">Salvar senha e entrar</button>
+  </div>
 </div>
 
 <!-- Tela inicial: escolha do modo de trabalho -->
@@ -1050,6 +1064,10 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
     <span class="mh-ic">🧲</span>
     <span><div class="mh-t">Viabilidade de Ressonância</div><div class="mh-d">Checklist de implantação de RM em hospital, centro médico ou imóvel externo</div></span>
   </button>
+  <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
+    <span id="usuario-logado" style="font-size:11px;color:rgba(255,255,255,.65)"></span>
+    <button onclick="sairDoApp()" style="background:none;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:50px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Sair</button>
+  </div>
 </div>
 
 <button class="btn-trocar-modo" id="btn-trocar-modo" onclick="abrirHome()">⇄ Modo</button>
@@ -1972,11 +1990,18 @@ const SB_KEY='sb_publishable_jvASTPaWind0mdBFcoBNhA_TsAqyOXR';
 const CLOUD_ID_KEY='dor360_cloud_id';
 
 async function sbReq(path,opts={}){
+  // Com RLS ativo no banco, as operações exigem o token do usuário logado
+  const tk=(typeof tokenAtual==='function'?await tokenAtual():null)||SB_KEY;
   const r=await fetch(SB_URL+'/rest/v1/'+path,{
     method:opts.method||'GET',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(opts.headers||{})},
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+tk,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(opts.headers||{})},
     body:opts.body!=null?JSON.stringify(opts.body):undefined
   });
+  if(r.status===401){
+    encerrarSessao();
+    mostrarLogin('Sua sessão expirou. Entre novamente.');
+    throw new Error('Sessão expirada — faça login novamente.');
+  }
   if(!r.ok){const t=await r.text();throw new Error(t);}
   if(r.status===204)return null;
   return r.json();
@@ -1999,7 +2024,8 @@ async function salvarRascunhoNuvem(){
     const responsavel=(ehRM?(estado.D['rm-prf-lic']||estado.D['rm-prf-inst']):estado.D['responsavel'])||estado.D['responsavel']||'Sem responsável';
     const nome_imovel=(ehRM?estado.D['rm-nome']:estado.D['nome'])||estado.D['nome']||'Sem nome';
     const cloudId=localStorage.getItem(CLOUD_ID_KEY);
-    const payload={responsavel,nome_imovel,status:'rascunho',updated_at:new Date().toISOString(),estado};
+    const sess=(typeof sessaoAtual==='function')?sessaoAtual():null;
+    const payload={responsavel,nome_imovel,status:'rascunho',updated_at:new Date().toISOString(),estado,salvo_por:(sess&&sess.email)||null};
     if(cloudId){
       await sbReq('relatorios?id=eq.'+cloudId,{method:'PATCH',body:payload});
     }else{
@@ -2141,36 +2167,143 @@ var MODO='visita';
 const RM_SECS=['rm-s1','rm-s2','rm-s3','rm-s4','rm-s5','rm-s6','rm-s7','rm-s8'];
 const RM_LBLS=['CONTEXTO','LICENCIAMENTO','INSTALAÇÕES','INTERFERÊNCIAS','ESPAÇO FÍSICO','CUSTO','FOTOS','RESULTADO'];
 
-/* ── Senha de acesso da equipe (hash SHA-256; vazio = sem senha) ── */
-const SENHA_HASH='';
-const ACESSO_KEY='dor360_acesso';
+/* ── Autenticação individual (Supabase Auth) ──
+   Cada integrante da equipe tem login próprio (e-mail corporativo + senha definida
+   por convite). A sessão fica no aparelho; o banco só aceita usuários autenticados (RLS). */
+const AUTH_KEY='dor360_sessao';
 
-async function sha256Hex(txt){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(txt));
-  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+function sessaoAtual(){
+  try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null');}catch(e){return null;}
 }
-async function verificarSenha(){
-  const inp=document.getElementById('senha-input');
-  const erro=document.getElementById('senha-erro');
-  if(!inp.value){erro.textContent='Digite a senha.';return;}
+function guardarSessao(s){
+  if(!s||!s.access_token)return;
+  localStorage.setItem(AUTH_KEY,JSON.stringify({
+    access_token:s.access_token,
+    refresh_token:s.refresh_token,
+    expires_at:s.expires_at||(Math.floor(Date.now()/1000)+(s.expires_in||3600)),
+    email:(s.user&&s.user.email)||s.email||''
+  }));
+}
+function encerrarSessao(){localStorage.removeItem(AUTH_KEY);}
+
+async function authReq(path,body,token){
+  const r=await fetch(SB_URL+'/auth/v1/'+path,{
+    method:body!==undefined?'POST':'GET',
+    headers:{'apikey':SB_KEY,'Content-Type':'application/json',...(token?{'Authorization':'Bearer '+token}:{})},
+    body:body!==undefined?JSON.stringify(body):undefined
+  });
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.msg||j.error_description||j.message||('Erro '+r.status));
+  return j;
+}
+
+/* Token válido para as chamadas ao banco; renova pela refresh token quando vencido.
+   Sem internet, mantém a sessão guardada (o preenchimento em campo não é bloqueado). */
+async function tokenAtual(){
+  const s=sessaoAtual();
+  if(!s)return null;
+  if(Math.floor(Date.now()/1000)<(s.expires_at-60))return s.access_token;
   try{
-    const h=await sha256Hex(inp.value.trim());
-    if(h===SENHA_HASH){
-      localStorage.setItem(ACESSO_KEY,SENHA_HASH);
-      document.getElementById('tela-senha').style.display='none';
-      document.getElementById('modo-home').style.display='flex';
-    }else{
-      erro.textContent='Senha incorreta.';
-      inp.value='';inp.focus();
-    }
-  }catch(e){erro.textContent='Erro ao verificar. Tente novamente.';}
+    const novo=await authReq('token?grant_type=refresh_token',{refresh_token:s.refresh_token});
+    guardarSessao(novo);
+    return novo.access_token;
+  }catch(e){
+    return s.access_token; // offline ou falha transitória: segue com o token guardado
+  }
+}
+
+async function fazerLogin(){
+  const email=(document.getElementById('login-email').value||'').trim().toLowerCase();
+  const senha=document.getElementById('login-senha').value||'';
+  const erro=document.getElementById('login-erro');
+  const btn=document.getElementById('btn-login');
+  if(!email||!senha){erro.textContent='Preencha e-mail e senha.';return;}
+  erro.textContent='';btn.disabled=true;btn.textContent='Entrando...';
+  try{
+    const sess=await authReq('token?grant_type=password',{email,password:senha});
+    guardarSessao(sess);
+    entrarNoApp();
+  }catch(e){
+    erro.textContent=/invalid/i.test(e.message)?'E-mail ou senha incorretos.':'Erro: '+e.message;
+  }finally{btn.disabled=false;btn.textContent='Entrar';}
+}
+
+async function esqueciSenha(){
+  const email=(document.getElementById('login-email').value||'').trim().toLowerCase();
+  const erro=document.getElementById('login-erro');
+  if(!email){erro.textContent='Digite seu e-mail acima e toque de novo em "Esqueci minha senha".';return;}
+  try{
+    await authReq('recover',{email});
+    erro.style.color='#9fe3b4';
+    erro.textContent='Enviamos um link de redefinição para '+email+'. Verifique a caixa de entrada (e o spam).';
+  }catch(e){erro.textContent='Erro ao enviar: '+e.message;}
+}
+
+/* Convite ou recuperação: o link do e-mail abre o app com tokens no endereço */
+let _tokensConvite=null;
+function processarHashAuth(){
+  if(!location.hash||location.hash.indexOf('access_token')===-1)return false;
+  const p=new URLSearchParams(location.hash.substring(1));
+  const tipo=p.get('type');
+  if(!p.get('access_token'))return false;
+  _tokensConvite={access_token:p.get('access_token'),refresh_token:p.get('refresh_token'),expires_in:parseInt(p.get('expires_in')||'3600',10)};
+  history.replaceState(null,'',location.pathname+location.search);
+  document.getElementById('definir-titulo').textContent=tipo==='recovery'?'Defina a sua nova senha':'Bem-vindo(a)! Defina a sua senha de acesso';
+  return true;
+}
+async function definirSenha(){
+  const s1=document.getElementById('nova-senha-1').value;
+  const s2=document.getElementById('nova-senha-2').value;
+  const erro=document.getElementById('definir-erro');
+  const btn=document.getElementById('btn-definir');
+  if(s1.length<8){erro.textContent='A senha precisa ter pelo menos 8 caracteres.';return;}
+  if(s1!==s2){erro.textContent='As senhas não conferem.';return;}
+  if(!_tokensConvite){erro.textContent='Link inválido ou expirado. Peça um novo convite.';return;}
+  erro.textContent='';btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const r=await fetch(SB_URL+'/auth/v1/user',{
+      method:'PUT',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json','Authorization':'Bearer '+_tokensConvite.access_token},
+      body:JSON.stringify({password:s1})
+    });
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.msg||j.message||('Erro '+r.status));
+    guardarSessao({..._tokensConvite,user:{email:j.email}});
+    _tokensConvite=null;
+    entrarNoApp();
+  }catch(e){
+    erro.textContent='Erro: '+e.message;
+  }finally{btn.disabled=false;btn.textContent='Salvar senha e entrar';}
+}
+
+function entrarNoApp(){
+  document.getElementById('tela-acesso').style.display='none';
+  const s=sessaoAtual();
+  const u=document.getElementById('usuario-logado');
+  if(u)u.textContent=s&&s.email?('Conectado(a) como '+s.email):'';
+  document.getElementById('modo-home').style.display='flex';
+}
+function sairDoApp(){
+  if(!confirm('Sair do aplicativo neste aparelho?\n\nO rascunho local permanece salvo.'))return;
+  encerrarSessao();
+  document.getElementById('modo-home').style.display='none';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const tm=document.getElementById('btn-trocar-modo');if(tm)tm.style.display='none';
+  mostrarLogin('');
+}
+function mostrarLogin(msg){
+  document.getElementById('form-login').style.display='flex';
+  document.getElementById('form-definir').style.display='none';
+  const erro=document.getElementById('login-erro');
+  erro.style.color='';erro.textContent=msg||'';
+  document.getElementById('tela-acesso').style.display='flex';
 }
 
 /* ── Troca de modo (Visita Técnica × Viabilidade de RM) ── */
 function escolherModo(m,silencioso){
   MODO=(m==='rm')?'rm':'visita';
   document.getElementById('modo-home').style.display='none';
-  const ts=document.getElementById('tela-senha');if(ts)ts.style.display='none';
+  const ts=document.getElementById('tela-acesso');if(ts)ts.style.display='none';
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   cur=0;
   const primeira=document.getElementById(secsAtual()[0]);
@@ -2786,13 +2919,19 @@ montarModuloRM();
 aplicarMultiSelect();
 if(typeof ativarSpellcheck==='function')try{ativarSpellcheck();}catch(e){}
 
-/* Fluxo de entrada: senha (se configurada) → escolha do modo */
+/* Fluxo de entrada: convite/recuperação pelo link do e-mail → definir senha;
+   sessão guardada → direto à escolha do modo; sem sessão → login */
 (function iniciarAcesso(){
-  const temSenha=SENHA_HASH&&localStorage.getItem(ACESSO_KEY)!==SENHA_HASH;
-  if(temSenha){
-    document.getElementById('tela-senha').style.display='flex';
+  if(processarHashAuth()){
+    document.getElementById('form-login').style.display='none';
+    document.getElementById('form-definir').style.display='flex';
+    document.getElementById('tela-acesso').style.display='flex';
+    return;
+  }
+  if(sessaoAtual()){
+    entrarNoApp();
   }else{
-    document.getElementById('modo-home').style.display='flex';
+    mostrarLogin('');
   }
 })();
 
