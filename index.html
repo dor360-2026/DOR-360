@@ -97,17 +97,19 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
 .rm-sub-hdr{font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:.08em;margin:6px 0 2px;padding-bottom:5px;border-bottom:1.5px solid var(--cinza-borda)}
 .rm-num{font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:.03em;margin-right:6px}
 .modo-home{position:fixed;inset:0;z-index:600;background:var(--azul);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:14px}
-.modo-home .mh-brand{font-size:12px;font-weight:700;color:var(--azul-claro);text-transform:uppercase;letter-spacing:.1em}
-.modo-home .mh-logo{font-size:42px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:4px}
-.modo-home .mh-sub{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:18px;text-align:center}
+.modo-home .mh-brand,.tela-senha .mh-brand{font-size:12px;font-weight:700;color:var(--azul-claro);text-transform:uppercase;letter-spacing:.1em}
+.modo-home .mh-logo,.tela-senha .mh-logo{font-size:42px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:4px}
+.modo-home .mh-sub,.tela-senha .mh-sub{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:18px;text-align:center}
 .mh-btn{width:100%;max-width:420px;background:#fff;border:none;border-radius:14px;padding:18px 20px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
 .mh-btn .mh-ic{font-size:28px}
 .mh-btn .mh-t{font-size:15px;font-weight:800;color:var(--azul-escuro)}
 .mh-btn .mh-d{font-size:11.5px;color:#64748b;margin-top:2px;line-height:1.35}
 .btn-trocar-modo{position:fixed;top:14px;left:14px;z-index:598;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:50px;padding:7px 13px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.02em;display:none}
-.tela-senha{position:fixed;inset:0;z-index:700;background:var(--azul-escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:12px}
-.tela-senha input{max-width:300px;text-align:center;font-size:18px;letter-spacing:.2em;text-transform:none}
-.tela-senha .ts-erro{color:#ffb4b4;font-size:12px;font-weight:700;min-height:16px}
+.tela-senha{position:fixed;inset:0;z-index:700;background:var(--azul);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:12px}
+.tela-senha input{width:100%;max-width:320px;text-align:center;font-size:15px;text-transform:none;padding:13px 14px;border-radius:10px;border:none;background:#fff;color:#1a2740;box-shadow:0 3px 12px rgba(0,0,0,.18)}
+.tela-senha input::placeholder{color:#94a3b8;letter-spacing:0}
+.tela-senha .btn-next{box-shadow:0 4px 14px rgba(0,0,0,.25);background:var(--azul-escuro)}
+.tela-senha .ts-erro{color:#ffd0d0;font-size:12.5px;font-weight:700;min-height:16px;max-width:340px;text-align:center;line-height:1.45}
 .mnuv-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:8px;letter-spacing:.05em;margin-left:6px;vertical-align:middle}
 .mnuv-badge-rm{background:#ede9fe;color:#6d28d9}
 .mnuv-badge-visita{background:#e0f2fe;color:#0369a1}
@@ -2102,8 +2104,11 @@ async function carregarRelatorioNuvem(id){
 }
 
 /* ── Verificação de rascunho salvo ao iniciar ── */
-// Executa após a carga completa do script, para que o módulo RM já exista no DOM antes de restaurar
-setTimeout(function checarRascunhoNaAbertura(){
+// Só oferece restaurar o rascunho DEPOIS do login (nada de dados antes da autenticação)
+let _rascunhoJaChecado=false;
+function checarRascunhoNaAbertura(){
+  if(_rascunhoJaChecado)return;
+  _rascunhoJaChecado=true;
   const salvo=carregarRascunhoSalvo();
   if(salvo&&salvo.D&&(salvo.D['nome']||salvo.D['rm-nome']||Object.keys(salvo.camposTexto||{}).length>0)){
     const nomeProjeto=salvo.D['nome']||salvo.D['rm-nome']||'PROJETO SEM NOME';
@@ -2113,7 +2118,7 @@ setTimeout(function checarRascunhoNaAbertura(){
       aplicarEstadoCompleto(salvo);
     }
   }
-},80);
+}
 
 // ── Spellcheck, autocomplete e autocorrect em PT-BR ──
 function ativarSpellcheck(){
@@ -2242,10 +2247,15 @@ async function esqueciSenha(){
 /* Convite ou recuperação: o link do e-mail abre o app com tokens no endereço */
 let _tokensConvite=null;
 function processarHashAuth(){
-  if(!location.hash||location.hash.indexOf('access_token')===-1)return false;
+  if(!location.hash)return false;
   const p=new URLSearchParams(location.hash.substring(1));
-  const tipo=p.get('type');
+  // Link expirado ou já utilizado: avisa e orienta a pedir um novo
+  if(p.get('error_code')||p.get('error')){
+    history.replaceState(null,'',location.pathname+location.search);
+    return 'erro';
+  }
   if(!p.get('access_token'))return false;
+  const tipo=p.get('type');
   _tokensConvite={access_token:p.get('access_token'),refresh_token:p.get('refresh_token'),expires_in:parseInt(p.get('expires_in')||'3600',10)};
   history.replaceState(null,'',location.pathname+location.search);
   document.getElementById('definir-titulo').textContent=tipo==='recovery'?'Defina a sua nova senha':'Bem-vindo(a)! Defina a sua senha de acesso';
@@ -2282,6 +2292,7 @@ function entrarNoApp(){
   const u=document.getElementById('usuario-logado');
   if(u)u.textContent=s&&s.email?('Conectado(a) como '+s.email):'';
   document.getElementById('modo-home').style.display='flex';
+  setTimeout(checarRascunhoNaAbertura,250);
 }
 function sairDoApp(){
   if(!confirm('Sair do aplicativo neste aparelho?\n\nO rascunho local permanece salvo.'))return;
@@ -2922,7 +2933,12 @@ if(typeof ativarSpellcheck==='function')try{ativarSpellcheck();}catch(e){}
 /* Fluxo de entrada: convite/recuperação pelo link do e-mail → definir senha;
    sessão guardada → direto à escolha do modo; sem sessão → login */
 (function iniciarAcesso(){
-  if(processarHashAuth()){
+  const hash=processarHashAuth();
+  if(hash==='erro'){
+    mostrarLogin('O link do e-mail expirou ou já foi usado. Digite seu e-mail acima e toque em "Esqueci minha senha" para receber um novo link.');
+    return;
+  }
+  if(hash===true){
     document.getElementById('form-login').style.display='none';
     document.getElementById('form-definir').style.display='flex';
     document.getElementById('tela-acesso').style.display='flex';
