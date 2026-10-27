@@ -1040,7 +1040,8 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
     <input type="password" id="login-senha" placeholder="Senha" style="max-width:320px;text-align:center;letter-spacing:.2em" autocomplete="current-password" onkeydown="if(event.key==='Enter')fazerLogin()">
     <div class="ts-erro" id="login-erro"></div>
     <button class="btn-next" style="max-width:320px" id="btn-login" onclick="fazerLogin()">Entrar</button>
-    <button style="background:none;border:none;color:#71C5E8;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline" onclick="esqueciSenha()">Esqueci minha senha</button>
+    <button style="background:none;border:none;color:#71C5E8;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline" onclick="pedirCodigo()">Esqueci minha senha / Primeiro acesso</button>
+    <button style="background:none;border:none;color:rgba(255,255,255,.6);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline" onclick="mostrarFormCodigo('')">Já tenho um código</button>
     <div style="font-size:10px;color:rgba(255,255,255,.5);max-width:320px;text-align:center;line-height:1.5">Dados de acesso e relatórios tratados conforme a LGPD, restritos à equipe de Projetos Especiais.</div>
   </div>
   <!-- Formulário de definição de senha (convite ou recuperação) -->
@@ -1050,6 +1051,19 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
     <input type="password" id="nova-senha-2" placeholder="Repita a nova senha" style="max-width:320px;text-align:center" autocomplete="new-password" onkeydown="if(event.key==='Enter')definirSenha()">
     <div class="ts-erro" id="definir-erro"></div>
     <button class="btn-next" style="max-width:320px" id="btn-definir" onclick="definirSenha()">Salvar senha e entrar</button>
+  </div>
+  <!-- Formulário de código (primeiro acesso ou senha esquecida): o código de
+       6 dígitos chega por e-mail e é digitado aqui — não depende de link,
+       imune ao filtro de segurança do Outlook que consome links de uso único -->
+  <div id="form-codigo" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
+    <div class="mh-sub">Digite o código recebido por e-mail e crie a sua senha</div>
+    <input type="email" id="codigo-email" placeholder="seu.nome@rededor.com.br" style="max-width:320px;text-align:center;letter-spacing:0;text-transform:lowercase" autocomplete="username">
+    <input type="text" id="codigo-token" placeholder="Código de 6 dígitos" style="max-width:320px;text-align:center;letter-spacing:.4em;font-weight:700" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+    <input type="password" id="codigo-senha-1" placeholder="Nova senha (mín. 8 caracteres)" style="max-width:320px;text-align:center" autocomplete="new-password">
+    <input type="password" id="codigo-senha-2" placeholder="Repita a nova senha" style="max-width:320px;text-align:center" autocomplete="new-password" onkeydown="if(event.key==='Enter')validarCodigo()">
+    <div class="ts-erro" id="codigo-erro"></div>
+    <button class="btn-next" style="max-width:320px" id="btn-codigo" onclick="validarCodigo()">Validar código e entrar</button>
+    <button style="background:none;border:none;color:rgba(255,255,255,.6);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline" onclick="mostrarLogin('')">Voltar para o login</button>
   </div>
 </div>
 
@@ -2233,15 +2247,64 @@ async function fazerLogin(){
   }finally{btn.disabled=false;btn.textContent='Entrar';}
 }
 
-async function esqueciSenha(){
+/* Primeiro acesso ou senha esquecida: envia um código de 6 dígitos por e-mail.
+   O código não é link, então o filtro de segurança do Outlook corporativo
+   (que visita e consome links de uso único) não o invalida. */
+async function pedirCodigo(){
   const email=(document.getElementById('login-email').value||'').trim().toLowerCase();
   const erro=document.getElementById('login-erro');
-  if(!email){erro.textContent='Digite seu e-mail acima e toque de novo em "Esqueci minha senha".';return;}
+  if(!email){erro.textContent='Digite seu e-mail acima e toque de novo em "Esqueci minha senha / Primeiro acesso".';return;}
+  erro.style.color='';erro.textContent='Enviando código...';
   try{
     await authReq('recover',{email});
-    erro.style.color='#9fe3b4';
-    erro.textContent='Enviamos um link de redefinição para '+email+'. Verifique a caixa de entrada (e o spam).';
+    document.getElementById('codigo-email').value=email;
+    erro.textContent='';
+    mostrarFormCodigo('Enviamos um código de 6 dígitos para '+email+'. Verifique a caixa de entrada (e o spam).');
   }catch(e){erro.textContent='Erro ao enviar: '+e.message;}
+}
+function mostrarFormCodigo(msg){
+  document.getElementById('form-login').style.display='none';
+  document.getElementById('form-definir').style.display='none';
+  document.getElementById('form-codigo').style.display='flex';
+  const le=document.getElementById('login-email');
+  const ce=document.getElementById('codigo-email');
+  if(le&&le.value&&!ce.value)ce.value=le.value.trim().toLowerCase();
+  const erro=document.getElementById('codigo-erro');
+  erro.style.color=msg?'#9fe3b4':'';erro.textContent=msg||'';
+  document.getElementById('tela-acesso').style.display='flex';
+}
+async function validarCodigo(){
+  const email=(document.getElementById('codigo-email').value||'').trim().toLowerCase();
+  const token=(document.getElementById('codigo-token').value||'').trim();
+  const s1=document.getElementById('codigo-senha-1').value;
+  const s2=document.getElementById('codigo-senha-2').value;
+  const erro=document.getElementById('codigo-erro');
+  const btn=document.getElementById('btn-codigo');
+  erro.style.color='';
+  if(!email){erro.textContent='Digite o seu e-mail.';return;}
+  if(!/^\d{6}$/.test(token)){erro.textContent='O código tem 6 números — confira no e-mail.';return;}
+  if(s1.length<8){erro.textContent='A senha precisa ter pelo menos 8 caracteres.';return;}
+  if(s1!==s2){erro.textContent='As senhas não conferem.';return;}
+  erro.textContent='';btn.disabled=true;btn.textContent='Validando...';
+  try{
+    // Valida o código: primeiro como recuperação de senha; se não for, como convite
+    let sess=null;
+    try{sess=await authReq('verify',{type:'recovery',email,token});}
+    catch(e1){sess=await authReq('verify',{type:'invite',email,token});}
+    const r=await fetch(SB_URL+'/auth/v1/user',{
+      method:'PUT',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json','Authorization':'Bearer '+sess.access_token},
+      body:JSON.stringify({password:s1})
+    });
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.msg||j.message||('Erro '+r.status));
+    guardarSessao({...sess,user:{email:(sess.user&&sess.user.email)||j.email||email}});
+    entrarNoApp();
+  }catch(e){
+    erro.textContent=/expired|invalid|not found/i.test(e.message)
+      ?'Código inválido ou vencido. Volte ao login e peça um novo em "Esqueci minha senha / Primeiro acesso".'
+      :'Erro: '+e.message;
+  }finally{btn.disabled=false;btn.textContent='Validar código e entrar';}
 }
 
 /* Convite ou recuperação: o link do e-mail abre o app com tokens no endereço */
@@ -2305,6 +2368,7 @@ function sairDoApp(){
 function mostrarLogin(msg){
   document.getElementById('form-login').style.display='flex';
   document.getElementById('form-definir').style.display='none';
+  const fc=document.getElementById('form-codigo');if(fc)fc.style.display='none';
   const erro=document.getElementById('login-erro');
   erro.style.color='';erro.textContent=msg||'';
   document.getElementById('tela-acesso').style.display='flex';
@@ -2935,7 +2999,7 @@ if(typeof ativarSpellcheck==='function')try{ativarSpellcheck();}catch(e){}
 (function iniciarAcesso(){
   const hash=processarHashAuth();
   if(hash==='erro'){
-    mostrarLogin('O link do e-mail expirou ou já foi usado. Digite seu e-mail acima e toque em "Esqueci minha senha" para receber um novo link.');
+    mostrarLogin('O link do e-mail expirou ou já foi usado. Digite seu e-mail acima e toque em "Esqueci minha senha / Primeiro acesso" para receber um código.');
     return;
   }
   if(hash===true){
