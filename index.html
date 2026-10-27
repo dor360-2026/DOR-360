@@ -1058,7 +1058,7 @@ textarea{resize:none;line-height:1.5;overflow:hidden;min-height:64px}
   <div id="form-codigo" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%">
     <div class="mh-sub">Digite o código recebido por e-mail e crie a sua senha</div>
     <input type="email" id="codigo-email" placeholder="seu.nome@rededor.com.br" style="max-width:320px;text-align:center;letter-spacing:0;text-transform:lowercase" autocomplete="username">
-    <input type="text" id="codigo-token" placeholder="Código de 6 dígitos" style="max-width:320px;text-align:center;letter-spacing:.4em;font-weight:700" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+    <input type="text" id="codigo-token" placeholder="Código recebido por e-mail" style="max-width:320px;text-align:center;letter-spacing:.4em;font-weight:700" inputmode="numeric" autocomplete="one-time-code" maxlength="8">
     <input type="password" id="codigo-senha-1" placeholder="Nova senha (mín. 8 caracteres)" style="max-width:320px;text-align:center" autocomplete="new-password">
     <input type="password" id="codigo-senha-2" placeholder="Repita a nova senha" style="max-width:320px;text-align:center" autocomplete="new-password" onkeydown="if(event.key==='Enter')validarCodigo()">
     <div class="ts-erro" id="codigo-erro"></div>
@@ -2259,7 +2259,7 @@ async function pedirCodigo(){
     await authReq('recover',{email});
     document.getElementById('codigo-email').value=email;
     erro.textContent='';
-    mostrarFormCodigo('Enviamos um código de 6 dígitos para '+email+'. Verifique a caixa de entrada (e o spam).');
+    mostrarFormCodigo('Enviamos um código para '+email+'. Verifique a caixa de entrada (e o spam).');
   }catch(e){erro.textContent='Erro ao enviar: '+e.message;}
 }
 function mostrarFormCodigo(msg){
@@ -2282,7 +2282,7 @@ async function validarCodigo(){
   const btn=document.getElementById('btn-codigo');
   erro.style.color='';
   if(!email){erro.textContent='Digite o seu e-mail.';return;}
-  if(!/^\d{6}$/.test(token)){erro.textContent='O código tem 6 números — confira no e-mail.';return;}
+  if(!/^\d{6,8}$/.test(token)){erro.textContent='Digite o código numérico exatamente como está no e-mail.';return;}
   if(s1.length<8){erro.textContent='A senha precisa ter pelo menos 8 caracteres.';return;}
   if(s1!==s2){erro.textContent='As senhas não conferem.';return;}
   erro.textContent='';btn.disabled=true;btn.textContent='Validando...';
