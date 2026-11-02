@@ -5,12 +5,12 @@
   "start_url": ".",
   "scope": "/DOR-360/",
   "display": "standalone",
-  "background_color": "#003DA5",
-  "theme_color": "#003DA5",
+  "background_color": "#06204A",
+  "theme_color": "#06204A",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "icon.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
