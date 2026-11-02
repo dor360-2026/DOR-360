@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=2">
 <meta name="theme-color" content="#06204A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -303,7 +303,8 @@ input,textarea,select{font-family:var(--f-txt)}
 
 /* títulos de seção sobre a folha clara */
 .sec-eyebrow{color:var(--champ-esc);letter-spacing:.24em;font-size:9px}
-.sec-title{color:#0A2240}
+.sec-title{color:#0A2240;display:flex;align-items:center;gap:10px}
+.sec-icone{flex:none;width:26px;height:26px;fill:none;stroke:var(--champ-esc);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .bullet-btn-import{border:1.5px dashed var(--champ);background:#fff;color:var(--champ-esc)}
 .bullet-btn-import:active{background:#FBF6EC}
 
@@ -2729,7 +2730,7 @@ function atualizarProjLbl(){
 const SNA=['SIM','NÃO','A VERIFICAR'];
 const SNN=['SIM','NÃO','N/A'];
 const RM_DEF=[
-{id:'rm-s1',eyebrow:'Viabilidade de RM · Etapa 01',titulo:'Dados Gerais',pdfTag:'V1',pdfTitulo:'Dados Gerais',cards:[
+{id:'rm-s1',eyebrow:'Seção 01',titulo:'Dados Gerais',pdfTag:'V1',pdfTitulo:'Dados Gerais',cards:[
  {hdr:'Identificação',itens:[
   {t:'txt',id:'rm-nome',lbl:'Nome do projeto',ph:'EX: 2ª RM HOSPITAL BIOCOR',projLbl:1},
   {t:'txt',id:'rm-endereco',lbl:'Endereço',ph:'RUA, NÚMERO, BAIRRO, CIDADE, UF'},
@@ -2757,41 +2758,41 @@ const RM_DEF=[
   {t:'area',id:'rm-obs-ctx',lbl:'Comentários — Dados Gerais',ph:'HISTÓRICO DA DEMANDA, QUEM SOLICITOU, PREMISSAS...'},
  ]},
 ]},
-{id:'rm-s2',eyebrow:'Viabilidade de RM · Etapa 02',titulo:'Licenciamento',desc:'Bloco inicial: se o licenciamento barrar, o restante nem precisa ser preenchido.',pdfTag:'V2',pdfTitulo:'Licenciamento',cards:[
+{id:'rm-s2',eyebrow:'Seção 02',titulo:'Licenciamento',desc:'Bloco inicial: se o licenciamento barrar, o restante nem precisa ser preenchido.',pdfTag:'V2',pdfTitulo:'Licenciamento',cards:[
  {hdr:'Licenciamento',preench:'rm-prf-lic',itens:[
-  {t:'chips',id:'rm-lic-permite',num:'2.1',lbl:'O licenciamento da área permite a implantação de serviço de exame de imagem?',ops:SNA,show:{'NÃO':'rm-lic-permite-wrap'}},
+  {t:'chips',id:'rm-lic-permite',lbl:'O licenciamento da área permite a implantação de serviço de exame de imagem?',ops:SNA,show:{'NÃO':'rm-lic-permite-wrap'}},
   {t:'cond',id:'rm-lic-permite-wrap',itens:[
    {t:'area',id:'rm-lic-restricao',lbl:'Qual a restrição do licenciamento?',ph:'EX: ZONEAMENTO NÃO PERMITE SADT, USO APROVADO É OUTRO...'},
   ]},
-  {t:'chips',id:'rm-lic-altera',num:'2.2',lbl:'A intervenção altera fluxos ou áreas aprovadas?',ops:SNA,show:{'SIM':'rm-lic-altera-wrap'}},
+  {t:'chips',id:'rm-lic-altera',lbl:'A intervenção altera fluxos ou áreas aprovadas?',ops:SNA,show:{'SIM':'rm-lic-altera-wrap'}},
   {t:'cond',id:'rm-lic-altera-wrap',itens:[
    {t:'area',id:'rm-lic-altera-desc',lbl:'O que será alterado?',ph:'EX: FLUXO DE PACIENTES DO SADT, ÁREA DE ESPERA APROVADA...'},
   ]},
-  {t:'chips',id:'rm-lic-visa',num:'2.3',lbl:'Será necessária nova aprovação na Vigilância Sanitária?',ops:SNA,show:{'SIM':'rm-lic-visa-wrap'}},
+  {t:'chips',id:'rm-lic-visa',lbl:'Será necessária nova aprovação na Vigilância Sanitária?',ops:SNA,show:{'SIM':'rm-lic-visa-wrap'}},
   {t:'cond',id:'rm-lic-visa-wrap',itens:[
-   {t:'chips',id:'rm-lic-visa-escopo',num:'2.4',lbl:'Escopo da aprovação na Vigilância Sanitária',excl:1,ops:['ÁREA DE INTERVENÇÃO','PROJETO COMO UM TODO','A VERIFICAR']},
+   {t:'chips',id:'rm-lic-visa-escopo',lbl:'Escopo da aprovação na Vigilância Sanitária',excl:1,ops:['ÁREA DE INTERVENÇÃO','PROJETO COMO UM TODO','A VERIFICAR']},
   ]},
-  {t:'chips',id:'rm-lic-alvara',num:'2.5',lbl:'Será necessário alvará de reforma?',ops:SNA},
-  {t:'chips',id:'rm-lic-bombeiros',num:'2.6',lbl:'Será necessária nova aprovação do projeto junto ao Corpo de Bombeiros?',ops:SNA},
+  {t:'chips',id:'rm-lic-alvara',lbl:'Será necessário alvará de reforma?',ops:SNA},
+  {t:'chips',id:'rm-lic-bombeiros',lbl:'Será necessária nova aprovação do projeto junto ao Corpo de Bombeiros?',ops:SNA},
   {t:'area',id:'rm-obs-lic',lbl:'Comentários — Licenciamento',ph:'OBSERVAÇÕES SOBRE O LICENCIAMENTO...'},
  ]},
 ]},
-{id:'rm-s3',eyebrow:'Viabilidade de RM · Etapa 03',titulo:'Espaço Físico',pdfTag:'V3',pdfTitulo:'Espaço Físico',cards:[
+{id:'rm-s3',eyebrow:'Seção 03',titulo:'Espaço Físico',pdfTag:'V3',pdfTitulo:'Espaço Físico',cards:[
  {hdr:'Localização e Medidas',preench:'rm-prf-esp',itens:[
-  {t:'chips',id:'rm-esp-levantamento',num:'3.1',lbl:'Será necessário contratar a atualização do levantamento arquitetônico?',hint:'para iniciar o estudo da solução',ops:SNA},
-  {t:'chips',id:'rm-esp-plano',num:'3.2',lbl:'A unidade tem Plano Diretor em andamento?',ops:SNA},
-  {t:'txt',id:'rm-esp-pav',num:'3.3',lbl:'Qual pavimento será instalado o equipamento?',ph:'EX: 1º PAVIMENTO'},
-  {t:'num',id:'rm-esp-pd-viga',num:'3.4',lbl:'Pé-direito da sala — piso a fundo de viga (m)',ph:'EX: 2.55'},
-  {t:'num',id:'rm-esp-pd-laje',num:'3.5',lbl:'Pé-direito da sala — piso a fundo de laje (m)',ph:'EX: 3.10'},
-  {t:'num',id:'rm-esp-pd-forro',num:'3.6',lbl:'Pé-direito da sala — piso a forro (m)',ph:'EX: 2.60'},
-  {t:'chips',id:'rm-esp-vedacao',num:'3.7',lbl:'Tipo de vedação existente',excl:1,ops:['ALVENARIA','DRYWALL','OUTRA'],show:{'OUTRA':'rm-esp-vedacao-wrap'}},
+  {t:'chips',id:'rm-esp-levantamento',lbl:'Será necessário contratar a atualização do levantamento arquitetônico?',hint:'para iniciar o estudo da solução',ops:SNA},
+  {t:'chips',id:'rm-esp-plano',lbl:'A unidade tem Plano Diretor em andamento?',ops:SNA},
+  {t:'txt',id:'rm-esp-pav',lbl:'Qual pavimento será instalado o equipamento?',ph:'EX: 1º PAVIMENTO'},
+  {t:'num',id:'rm-esp-pd-viga',lbl:'Pé-direito da sala — piso a fundo de viga (m)',ph:'EX: 2.55'},
+  {t:'num',id:'rm-esp-pd-laje',lbl:'Pé-direito da sala — piso a fundo de laje (m)',ph:'EX: 3.10'},
+  {t:'num',id:'rm-esp-pd-forro',lbl:'Pé-direito da sala — piso a forro (m)',ph:'EX: 2.60'},
+  {t:'chips',id:'rm-esp-vedacao',lbl:'Tipo de vedação existente',excl:1,ops:['ALVENARIA','DRYWALL','OUTRA'],show:{'OUTRA':'rm-esp-vedacao-wrap'}},
   {t:'cond',id:'rm-esp-vedacao-wrap',itens:[
    {t:'txt',id:'rm-esp-vedacao-outra',lbl:'Qual a vedação?',ph:'EX: PAINEL WALL, STEEL FRAME...'},
   ]},
-  {t:'chips',id:'rm-esp-vedacao-mantida',num:'3.8',lbl:'A vedação existente será mantida?',ops:SNA},
-  {t:'chips',id:'rm-esp-reforco-madeira',num:'3.9',lbl:'Será necessário reforço em madeira nas paredes existentes?',ops:SNA},
-  {t:'txt',id:'rm-esp-contrapiso',num:'3.10',lbl:'Altura do contrapiso existente',ph:'CM'},
-  {t:'chips',id:'rm-esp-melhor-local',num:'3.11',lbl:'O local escolhido é o melhor para implantar o equipamento?',ops:SNA,show:{'NÃO':'rm-esp-outro-wrap'}},
+  {t:'chips',id:'rm-esp-vedacao-mantida',lbl:'A vedação existente será mantida?',ops:SNA},
+  {t:'chips',id:'rm-esp-reforco-madeira',lbl:'Será necessário reforço em madeira nas paredes existentes?',ops:SNA},
+  {t:'txt',id:'rm-esp-contrapiso',lbl:'Altura do contrapiso existente',ph:'CM'},
+  {t:'chips',id:'rm-esp-melhor-local',lbl:'O local escolhido é o melhor para implantar o equipamento?',ops:SNA,show:{'NÃO':'rm-esp-outro-wrap'}},
   {t:'cond',id:'rm-esp-outro-wrap',itens:[
    {t:'txt',id:'rm-esp-outro-local',lbl:'Qual o outro local?',ph:'DESCREVA A ALTERNATIVA'},
   ]},
@@ -2807,95 +2808,95 @@ const RM_DEF=[
   {t:'area',id:'rm-obs-esp',lbl:'Comentários — Espaço Físico',ph:'OBSERVAÇÕES GERAIS DO BLOCO...'},
  ]},
 ]},
-{id:'rm-s4',eyebrow:'Viabilidade de RM · Etapa 04',titulo:'Estrutura',pdfTag:'V4',pdfTitulo:'Estrutura',cards:[
+{id:'rm-s4',eyebrow:'Seção 04',titulo:'Estrutura',pdfTag:'V4',pdfTitulo:'Estrutura',cards:[
  {hdr:'Estrutura da Sala e Entorno',itens:[
-  {t:'chips',id:'rm-esp-vigas',num:'4.1',lbl:'Há vigas na posição da sala de exames proposta?',hint:'se sim, fazer cadastramento — podem exigir desvios de instalações',ops:SNA,show:{'SIM':'rm-esp-vigas-wrap'}},
+  {t:'chips',id:'rm-esp-vigas',lbl:'Há vigas na posição da sala de exames proposta?',hint:'se sim, fazer cadastramento — podem exigir desvios de instalações',ops:SNA,show:{'SIM':'rm-esp-vigas-wrap'}},
   {t:'cond',id:'rm-esp-vigas-wrap',itens:[
    {t:'area',id:'rm-esp-vigas-desc',lbl:'Posição das vigas / observações do cadastramento',ph:'EX: VIGA INVERTIDA NO EIXO DA SALA, ALTURA 60 CM...'},
   ]},
-  {t:'chips',id:'rm-esp-nova-laje',num:'4.2',lbl:'Será necessária construção de nova laje?',ops:SNA},
-  {t:'chips',id:'rm-int-reforco',num:'4.3',lbl:'Há reforço de aço no piso ou ferragem de laje a menos de 1,25 m do centro do magneto?',hint:'limite: 100 kg/m²',ops:SNA,show:{'SIM':'rm-al-reforco'}},
+  {t:'chips',id:'rm-esp-nova-laje',lbl:'Será necessária construção de nova laje?',ops:SNA},
+  {t:'chips',id:'rm-int-reforco',lbl:'Há reforço de aço no piso ou ferragem de laje a menos de 1,25 m do centro do magneto?',hint:'limite: 100 kg/m²',ops:SNA,show:{'SIM':'rm-al-reforco'}},
   {t:'alerta',id:'rm-al-reforco',msg:'Ferragem/reforço estrutural relevante próximo ao magneto',ph:'AVALIAR IMPACTO DE CUSTO E VIABILIDADE — CONSULTOR ESTRUTURAL...'},
  ]},
  {hdr:'Laje Inferior',itens:[
-  {t:'chips',id:'rm-laje-inf-tem',num:'4.4',lbl:'Há pavimento inferior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-inf-wrap'}},
+  {t:'chips',id:'rm-laje-inf-tem',lbl:'Há pavimento inferior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-inf-wrap'}},
   {t:'cond',id:'rm-laje-inf-wrap',itens:[
-   {t:'txt',id:'rm-laje-inf-ocup',num:'4.5',lbl:'Qual a ocupação do pavimento inferior?',ph:'EX: CENTRO CIRÚRGICO, ESTACIONAMENTO, UTI...'},
-   {t:'num',id:'rm-laje-inf-pd',num:'4.6',lbl:'Pé-direito do piso inferior — piso a fundo de laje (m)',ph:'EX: 2.80',alerta:{min:2.5,id:'rm-al-pdinf',msg:'Pé-direito do pavimento inferior abaixo do mínimo de 2,50 m',ph:'JUSTIFICATIVA / TRATATIVA...'}},
-   {t:'chips',id:'rm-laje-inf-remoto',num:'4.7',lbl:'Será necessária instalação de piso remoto?',ops:SNA},
-   {t:'chips',id:'rm-laje-inf-reforco',num:'4.8',lbl:'Será necessário reforço estrutural?',ops:SNA},
-   {t:'chips',id:'rm-laje-inf-tipo',num:'4.9',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA'],show:{'OUTRA':'rm-laje-inf-tipo-wrap'}},
+   {t:'txt',id:'rm-laje-inf-ocup',lbl:'Qual a ocupação do pavimento inferior?',ph:'EX: CENTRO CIRÚRGICO, ESTACIONAMENTO, UTI...'},
+   {t:'num',id:'rm-laje-inf-pd',lbl:'Pé-direito do piso inferior — piso a fundo de laje (m)',ph:'EX: 2.80',alerta:{min:2.5,id:'rm-al-pdinf',msg:'Pé-direito do pavimento inferior abaixo do mínimo de 2,50 m',ph:'JUSTIFICATIVA / TRATATIVA...'}},
+   {t:'chips',id:'rm-laje-inf-remoto',lbl:'Será necessária instalação de piso remoto?',ops:SNA},
+   {t:'chips',id:'rm-laje-inf-reforco',lbl:'Será necessário reforço estrutural?',ops:SNA},
+   {t:'chips',id:'rm-laje-inf-tipo',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA'],show:{'OUTRA':'rm-laje-inf-tipo-wrap'}},
    {t:'cond',id:'rm-laje-inf-tipo-wrap',itens:[
     {t:'txt',id:'rm-laje-inf-tipo-outra',lbl:'Qual o tipo de laje?',ph:'DESCREVA'},
    ]},
-   {t:'txt',id:'rm-laje-inf-esp',num:'4.10',lbl:'Espessura da laje',ph:'CM'},
+   {t:'txt',id:'rm-laje-inf-esp',lbl:'Espessura da laje',ph:'CM'},
   ]},
  ]},
  {hdr:'Laje Superior',itens:[
-  {t:'chips',id:'rm-laje-sup-tem',num:'4.11',lbl:'Há ocupação no pavimento superior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-sup-wrap'}},
+  {t:'chips',id:'rm-laje-sup-tem',lbl:'Há ocupação no pavimento superior à sala de exames?',ops:SNA,show:{'SIM':'rm-laje-sup-wrap'}},
   {t:'cond',id:'rm-laje-sup-wrap',itens:[
-   {t:'txt',id:'rm-laje-sup-ocup',num:'4.12',lbl:'Qual a ocupação do pavimento superior?',ph:'EX: INTERNAÇÃO, ÁREA TÉCNICA, COBERTURA...'},
-   {t:'chips',id:'rm-laje-sup-tipo',num:'4.13',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA'],show:{'OUTRA':'rm-laje-sup-tipo-wrap'}},
+   {t:'txt',id:'rm-laje-sup-ocup',lbl:'Qual a ocupação do pavimento superior?',ph:'EX: INTERNAÇÃO, ÁREA TÉCNICA, COBERTURA...'},
+   {t:'chips',id:'rm-laje-sup-tipo',lbl:'Tipo de laje',excl:1,ops:['NERVURADA','PROTENDIDA','CONCRETO ARMADO','PRÉ-MOLDADA','TRELIÇADA','OUTRA'],show:{'OUTRA':'rm-laje-sup-tipo-wrap'}},
    {t:'cond',id:'rm-laje-sup-tipo-wrap',itens:[
     {t:'txt',id:'rm-laje-sup-tipo-outra',lbl:'Qual o tipo de laje?',ph:'DESCREVA'},
    ]},
-   {t:'txt',id:'rm-laje-sup-esp',num:'4.14',lbl:'Espessura da laje',ph:'CM'},
+   {t:'txt',id:'rm-laje-sup-esp',lbl:'Espessura da laje',ph:'CM'},
   ]},
  ]},
 ]},
-{id:'rm-s5',eyebrow:'Viabilidade de RM · Etapa 05',titulo:'Interferências',desc:'Distâncias tendo como referência o isocentro do equipamento (0,5T, 1,5T e 3,0T).',pdfTag:'V5',pdfTitulo:'Interferências (referência: isocentro)',cards:[
+{id:'rm-s5',eyebrow:'Seção 05',titulo:'Interferências',desc:'Distâncias tendo como referência o isocentro do equipamento (0,5T, 1,5T e 3,0T).',pdfTag:'V5',pdfTitulo:'Interferências (referência: isocentro)',cards:[
  {hdr:'Interferências',preench:'rm-prf-interf',itens:[
-  {t:'chips',id:'rm-int-elev-tem',num:'5.1',lbl:'Há elevador / plataforma elevatória próximo à sala de exames?',ops:SNA,show:{'SIM':'rm-int-elev-wrap'}},
+  {t:'chips',id:'rm-int-elev-tem',lbl:'Há elevador / plataforma elevatória próximo à sala de exames?',ops:SNA,show:{'SIM':'rm-int-elev-wrap'}},
   {t:'cond',id:'rm-int-elev-wrap',itens:[
    {t:'chips',id:'rm-int-elev-8m',lbl:'Está a menos de 8 m do isocentro?',hint:'mínimo: 8 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-elev'}},
    {t:'alerta',id:'rm-al-elev',msg:'Elevador dentro do raio mínimo de 8 m do isocentro',ph:'EX: ISOCENTRO A 7 M DO ELEVADOR — VERIFICAR A INTERFERÊNCIA PELO TESTE DE EMI'},
   ]},
   {t:'sub',lbl:'Passagem de veículos'},
-  {t:'chips',id:'rm-int-carro-tem',num:'5.2',lbl:'Há passagem de carros (aprox. 900 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-carro-wrap'}},
+  {t:'chips',id:'rm-int-carro-tem',lbl:'Há passagem de carros (aprox. 900 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-carro-wrap'}},
   {t:'cond',id:'rm-int-carro-wrap',itens:[
    {t:'chips',id:'rm-int-carro-55',lbl:'Está a menos de 5,5 m do isocentro?',hint:'mínimo: 5,5 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-carro'}},
    {t:'alerta',id:'rm-al-carro',msg:'Passagem de carros dentro do raio mínimo de 5,5 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
-  {t:'chips',id:'rm-int-caminhao-tem',num:'5.3',lbl:'Há passagem de caminhões (aprox. 4.500 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-caminhao-wrap'}},
+  {t:'chips',id:'rm-int-caminhao-tem',lbl:'Há passagem de caminhões (aprox. 4.500 kg) próxima?',ops:SNA,show:{'SIM':'rm-int-caminhao-wrap'}},
   {t:'cond',id:'rm-int-caminhao-wrap',itens:[
    {t:'chips',id:'rm-int-caminhao-65',lbl:'Está a menos de 6,5 m do isocentro?',hint:'mínimo: 6,5 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-caminhao'}},
    {t:'alerta',id:'rm-al-caminhao',msg:'Passagem de caminhões dentro do raio mínimo de 6,5 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
-  {t:'chips',id:'rm-int-metro-tem',num:'5.4',lbl:'Há trem / metrô próximo?',ops:SNA,show:{'SIM':'rm-int-metro-wrap'}},
+  {t:'chips',id:'rm-int-metro-tem',lbl:'Há trem / metrô próximo?',ops:SNA,show:{'SIM':'rm-int-metro-wrap'}},
   {t:'cond',id:'rm-int-metro-wrap',itens:[
    {t:'txt',id:'rm-int-metro-dist',lbl:'Qual a distância até o isocentro?',ph:'EX: 55 M'},
    {t:'chips',id:'rm-int-metro-40',lbl:'Está a menos de 40 m?',hint:'mínimo: 40 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-metro'}},
    {t:'alerta',id:'rm-al-metro',msg:'Trem/metrô dentro do raio mínimo de 40 m',ph:'EX: VERIFICAR INTERFERÊNCIA E VIBRAÇÃO NO TESTE DE EMI'},
   ]},
   {t:'sub',lbl:'Equipamentos de refrigeração'},
-  {t:'chips',id:'rm-int-evap-tem',num:'5.5',lbl:'Há evaporador da máquina de HVAC próximo?',ops:SNA,show:{'SIM':'rm-int-evap-wrap'}},
+  {t:'chips',id:'rm-int-evap-tem',lbl:'Há evaporador da máquina de HVAC próximo?',ops:SNA,show:{'SIM':'rm-int-evap-wrap'}},
   {t:'cond',id:'rm-int-evap-wrap',itens:[
    {t:'chips',id:'rm-int-evap-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-evap'}},
    {t:'alerta',id:'rm-al-evap',msg:'Evaporador de HVAC dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
-  {t:'chips',id:'rm-int-chiller-tem',num:'5.6',lbl:'Há chiller do sistema de água de criogenia próximo?',ops:SNA,show:{'SIM':'rm-int-chiller-wrap'}},
+  {t:'chips',id:'rm-int-chiller-tem',lbl:'Há chiller do sistema de água de criogenia próximo?',ops:SNA,show:{'SIM':'rm-int-chiller-wrap'}},
   {t:'cond',id:'rm-int-chiller-wrap',itens:[
    {t:'chips',id:'rm-int-chiller-4m',lbl:'Está a menos de 4 m do isocentro?',hint:'mínimo: 4 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-chiller'}},
    {t:'alerta',id:'rm-al-chiller',msg:'Chiller de criogenia dentro do raio mínimo de 4 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
-  {t:'chips',id:'rm-int-cond-tem',num:'5.7',lbl:'Há condensadoras próximas?',ops:SNA,show:{'SIM':'rm-int-cond-wrap'}},
+  {t:'chips',id:'rm-int-cond-tem',lbl:'Há condensadoras próximas?',ops:SNA,show:{'SIM':'rm-int-cond-wrap'}},
   {t:'cond',id:'rm-int-cond-wrap',itens:[
    {t:'chips',id:'rm-int-cond-8m',lbl:'Estão a menos de 8 m do isocentro?',hint:'mínimo: 8 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-cond'}},
    {t:'alerta',id:'rm-al-cond',msg:'Condensadoras dentro do raio mínimo de 8 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
   {t:'sub',lbl:'Subestação / linhas de transmissão'},
-  {t:'chips',id:'rm-int-sub-tem',num:'5.8',lbl:'Há subestação ou linha de transmissão de energia próxima?',ops:SNA,show:{'SIM':'rm-int-sub-wrap'}},
+  {t:'chips',id:'rm-int-sub-tem',lbl:'Há subestação ou linha de transmissão de energia próxima?',ops:SNA,show:{'SIM':'rm-int-sub-wrap'}},
   {t:'cond',id:'rm-int-sub-wrap',itens:[
    {t:'chips',id:'rm-int-sub-20m',lbl:'Está a menos de 20 m do isocentro?',hint:'mínimo: 20 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-sub'}},
    {t:'alerta',id:'rm-al-sub',msg:'Subestação/linha de transmissão dentro do raio mínimo de 20 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
   {t:'sub',lbl:'Outros equipamentos de imagem'},
-  {t:'chips',id:'rm-int-outra-rm-tem',num:'5.9',lbl:'Há outro equipamento de ressonância magnética próximo?',ops:SNA,show:{'SIM':'rm-int-outra-rm-wrap'}},
+  {t:'chips',id:'rm-int-outra-rm-tem',lbl:'Há outro equipamento de ressonância magnética próximo?',ops:SNA,show:{'SIM':'rm-int-outra-rm-wrap'}},
   {t:'cond',id:'rm-int-outra-rm-wrap',itens:[
    {t:'chips',id:'rm-int-outra-rm-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-outra-rm'}},
    {t:'alerta',id:'rm-al-outra-rm',msg:'Outra RM dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
   ]},
-  {t:'chips',id:'rm-int-imagem-tem',num:'5.10',lbl:'Há equipamento de imagem próximo (tomografia, raio-X, PET, acelerador linear)?',ops:SNA,show:{'SIM':'rm-int-imagem-wrap'}},
+  {t:'chips',id:'rm-int-imagem-tem',lbl:'Há equipamento de imagem próximo (tomografia, raio-X, PET, acelerador linear)?',ops:SNA,show:{'SIM':'rm-int-imagem-wrap'}},
   {t:'cond',id:'rm-int-imagem-wrap',itens:[
    {t:'chips',id:'rm-int-imagem-6m',lbl:'Está a menos de 6 m do isocentro?',hint:'mínimo: 6 m',ops:['SIM','NÃO'],show:{'SIM':'rm-al-imagem'}},
    {t:'alerta',id:'rm-al-imagem',msg:'Equipamento de imagem dentro do raio mínimo de 6 m',ph:'JUSTIFICATIVA / TRATATIVA...'},
@@ -2903,116 +2904,116 @@ const RM_DEF=[
   {t:'area',id:'rm-obs-interf',lbl:'Comentários — Interferências',ph:'OBSERVAÇÕES GERAIS DO BLOCO DE INTERFERÊNCIAS...'},
  ]},
 ]},
-{id:'rm-s6',eyebrow:'Viabilidade de RM · Etapa 06',titulo:'Elétrica',pdfTag:'V6',pdfTitulo:'Elétrica',cards:[
+{id:'rm-s6',eyebrow:'Seção 06',titulo:'Elétrica',pdfTag:'V6',pdfTitulo:'Elétrica',cards:[
  {hdr:'Fornecimento e Transformadores',preench:'rm-prf-el',itens:[
-  {t:'txt',id:'rm-el-demanda-contratada',num:'6.1',lbl:'Demanda contratada (ver conta de energia)',ph:'KVA'},
-  {t:'txt',id:'rm-el-maior-demanda',num:'6.2',lbl:'Maior demanda consumida (últimos 12 meses)',ph:'KVA'},
-  {t:'txt',id:'rm-el-trafo-oper',num:'6.3',lbl:'Transformadores existentes — operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-el-demanda-contratada',lbl:'Demanda contratada (ver conta de energia)',ph:'KVA'},
+  {t:'txt',id:'rm-el-maior-demanda',lbl:'Maior demanda consumida (últimos 12 meses)',ph:'KVA'},
+  {t:'txt',id:'rm-el-trafo-oper',lbl:'Transformadores existentes — operacionais',ph:'QTDE'},
   {t:'txt',id:'rm-el-trafo-res',lbl:'Transformadores existentes — reserva',ph:'QTDE'},
-  {t:'txt',id:'rm-el-trafo-pot',num:'6.4',lbl:'Potência dos transformadores existentes',ph:'KVA'},
-  {t:'txt',id:'rm-el-trafo-tensao',num:'6.5',lbl:'Tensão dos transformadores existentes',ph:'V'},
-  {t:'txt',id:'rm-el-trafo-disp',num:'6.6',lbl:'Demanda disponível nos transformadores existentes',ph:'KVA'},
-  {t:'chips',id:'rm-el-tensao-unidade',num:'6.7',lbl:'Tensão da unidade',excl:1,ops:['220/127','380/220','OUTRA'],show:{'OUTRA':'rm-el-tensao-outra-wrap'}},
+  {t:'txt',id:'rm-el-trafo-pot',lbl:'Potência dos transformadores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-trafo-tensao',lbl:'Tensão dos transformadores existentes',ph:'V'},
+  {t:'txt',id:'rm-el-trafo-disp',lbl:'Demanda disponível nos transformadores existentes',ph:'KVA'},
+  {t:'chips',id:'rm-el-tensao-unidade',lbl:'Tensão da unidade',excl:1,ops:['220/127','380/220','OUTRA'],show:{'OUTRA':'rm-el-tensao-outra-wrap'}},
   {t:'cond',id:'rm-el-tensao-outra-wrap',itens:[
    {t:'txt',id:'rm-el-tensao-outra',lbl:'Qual a tensão?',ph:'EX: 440/254 V'},
   ]},
-  {t:'chips',id:'rm-el-trafo-elevador',num:'6.8',lbl:'Será necessário transformador elevador de tensão?',ops:SNA},
-  {t:'chips',id:'rm-el-trafo-elevador-espaco',num:'6.9',lbl:'Há espaço físico para instalação de novo transformador elevador? (verificar interferências com o projeto)',ops:SNA},
+  {t:'chips',id:'rm-el-trafo-elevador',lbl:'Será necessário transformador elevador de tensão?',ops:SNA},
+  {t:'chips',id:'rm-el-trafo-elevador-espaco',lbl:'Há espaço físico para instalação de novo transformador elevador? (verificar interferências com o projeto)',ops:SNA},
  ]},
  {hdr:'Geradores e Nobreak',itens:[
-  {t:'txt',id:'rm-el-ger-oper',num:'6.10',lbl:'Geradores existentes — operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-el-ger-oper',lbl:'Geradores existentes — operacionais',ph:'QTDE'},
   {t:'txt',id:'rm-el-ger-res',lbl:'Geradores existentes — reserva',ph:'QTDE'},
-  {t:'txt',id:'rm-el-ger-pot',num:'6.11',lbl:'Potência dos geradores existentes',ph:'KVA'},
-  {t:'txt',id:'rm-el-ger-tensao',num:'6.12',lbl:'Tensão dos geradores existentes',ph:'V'},
-  {t:'txt',id:'rm-el-ger-disp',num:'6.13',lbl:'Demanda disponível nos geradores existentes',ph:'KVA'},
-  {t:'chips',id:'rm-el-outra-rm-ger',num:'6.14',lbl:'Existe outra RM alimentada pelo gerador existente?',ops:SNN,show:{'SIM':'rm-el-outra-rm-wrap2'}},
+  {t:'txt',id:'rm-el-ger-pot',lbl:'Potência dos geradores existentes',ph:'KVA'},
+  {t:'txt',id:'rm-el-ger-tensao',lbl:'Tensão dos geradores existentes',ph:'V'},
+  {t:'txt',id:'rm-el-ger-disp',lbl:'Demanda disponível nos geradores existentes',ph:'KVA'},
+  {t:'chips',id:'rm-el-outra-rm-ger',lbl:'Existe outra RM alimentada pelo gerador existente?',ops:SNN,show:{'SIM':'rm-el-outra-rm-wrap2'}},
   {t:'cond',id:'rm-el-outra-rm-wrap2',itens:[
    {t:'txt',id:'rm-el-outra-rm-desc',lbl:'Qual RM e por qual painel é alimentada?',ph:'EX: RM 1,5T EXISTENTE — PAINEL QGBT-2'},
   ]},
-  {t:'chips',id:'rm-el-rm-exist-nobreak',num:'6.15',lbl:'A RM existente tem alimentação por nobreak exclusivo?',ops:SNN},
-  {t:'chips',id:'rm-el-nobreak-sala-espaco',num:'6.16',lbl:'A sala do nobreak exclusivo da RM existente tem espaço para mais equipamentos?',ops:SNN},
-  {t:'chips',id:'rm-el-nova-nobreak',num:'6.17',lbl:'A nova RM terá alimentação por nobreak exclusivo?',ops:SNA},
+  {t:'chips',id:'rm-el-rm-exist-nobreak',lbl:'A RM existente tem alimentação por nobreak exclusivo?',ops:SNN},
+  {t:'chips',id:'rm-el-nobreak-sala-espaco',lbl:'A sala do nobreak exclusivo da RM existente tem espaço para mais equipamentos?',ops:SNN},
+  {t:'chips',id:'rm-el-nova-nobreak',lbl:'A nova RM terá alimentação por nobreak exclusivo?',ops:SNA},
  ]},
  {hdr:'Painéis e Disjuntores',itens:[
-  {t:'txt',id:'rm-el-paineis-transf',num:'6.18',lbl:'Quantidade de painéis de transferência',ph:'QTDE'},
-  {t:'txt',id:'rm-el-paineis-bt',num:'6.19',lbl:'Quantidade de painéis de baixa tensão alimentados pelo gerador',ph:'QTDE'},
-  {t:'txt',id:'rm-el-paineis-disp',num:'6.20',lbl:'Demanda disponível nos painéis existentes',ph:'KVA'},
-  {t:'chips',id:'rm-el-painel-condicoes',num:'6.21',lbl:'As condições físicas do painel que alimentará o novo equipamento são adequadas?',hint:'evidenciar por fotos',ops:SNA,show:{'NÃO':'rm-el-painel-cond-wrap'}},
+  {t:'txt',id:'rm-el-paineis-transf',lbl:'Quantidade de painéis de transferência',ph:'QTDE'},
+  {t:'txt',id:'rm-el-paineis-bt',lbl:'Quantidade de painéis de baixa tensão alimentados pelo gerador',ph:'QTDE'},
+  {t:'txt',id:'rm-el-paineis-disp',lbl:'Demanda disponível nos painéis existentes',ph:'KVA'},
+  {t:'chips',id:'rm-el-painel-condicoes',lbl:'As condições físicas do painel que alimentará o novo equipamento são adequadas?',hint:'evidenciar por fotos',ops:SNA,show:{'NÃO':'rm-el-painel-cond-wrap'}},
   {t:'cond',id:'rm-el-painel-cond-wrap',itens:[
    {t:'area',id:'rm-el-painel-cond-desc',lbl:'Descreva as condições encontradas',ph:'EX: OXIDAÇÃO, FIAÇÃO EXPOSTA, SEM IDENTIFICAÇÃO DE CIRCUITOS...'},
   ]},
-  {t:'chips',id:'rm-el-painel-norma',num:'6.22',lbl:'Painel que alimentará o novo equipamento — norma atendida',excl:1,ops:['IEC 61439','QUADRO CONVENCIONAL','A VERIFICAR']},
-  {t:'sub',lbl:'6.23 · O painel possui ESPAÇO FÍSICO para novo disjuntor? (evidenciar por fotos)'},
+  {t:'chips',id:'rm-el-painel-norma',lbl:'Painel que alimentará o novo equipamento — norma atendida',excl:1,ops:['IEC 61439','QUADRO CONVENCIONAL','A VERIFICAR']},
+  {t:'sub',lbl:'O painel possui ESPAÇO FÍSICO para novo disjuntor? (evidenciar por fotos)'},
   {t:'chips',id:'rm-el-esp-disj-rm',lbl:'a) Para o equipamento da RM',ops:SNA},
   {t:'chips',id:'rm-el-esp-disj-chiller',lbl:'b) Para o chiller do sistema de criogenia',ops:SNA},
   {t:'chips',id:'rm-el-esp-disj-clima',lbl:'c) Para o quadro de força da climatização (sala técnica, exames e comando)',ops:SNA},
-  {t:'sub',lbl:'6.24 · O painel possui DISJUNTOR DISPONÍVEL? (evidenciar por fotos)'},
+  {t:'sub',lbl:'O painel possui DISJUNTOR DISPONÍVEL? (evidenciar por fotos)'},
   {t:'chips',id:'rm-el-disj-rm',lbl:'a) Para o equipamento da RM',ops:SNA},
   {t:'chips',id:'rm-el-disj-chiller',lbl:'b) Para o chiller do sistema de criogenia',ops:SNA},
   {t:'chips',id:'rm-el-disj-clima',lbl:'c) Para o quadro de força da climatização (sala técnica, exames e comando)',ops:SNA},
  ]},
  {hdr:'Alimentadores e Eletrocalhas',itens:[
-  {t:'chips',id:'rm-el-eletrocalhas-circ',num:'6.25',lbl:'Existem eletrocalhas com alimentadores nas circulações existentes?',ops:SNA},
-  {t:'chips',id:'rm-el-eletrocalhas-sala',num:'6.26',lbl:'Existem eletrocalhas com alimentadores na sala de exame proposta?',ops:SNA},
-  {t:'chips',id:'rm-el-redes-principais',num:'6.27',lbl:'Existem redes de alimentação elétrica principais na área da sala de exame proposta?',ops:SNA},
-  {t:'chips',id:'rm-el-eletrocalha-espaco',num:'6.28',lbl:'A eletrocalha existente possui espaço para os novos cabos de alimentação da RM?',ops:SNA},
-  {t:'txt',id:'rm-el-alim-qtd',num:'6.29',lbl:'Quantidade de cabos alimentadores',ph:'EX: 4 CABOS POR FASE'},
-  {t:'txt',id:'rm-el-alim-bitola',num:'6.30',lbl:'Bitola dos alimentadores (mm²)',ph:'EX: 95 MM²'},
+  {t:'chips',id:'rm-el-eletrocalhas-circ',lbl:'Existem eletrocalhas com alimentadores nas circulações existentes?',ops:SNA},
+  {t:'chips',id:'rm-el-eletrocalhas-sala',lbl:'Existem eletrocalhas com alimentadores na sala de exame proposta?',ops:SNA},
+  {t:'chips',id:'rm-el-redes-principais',lbl:'Existem redes de alimentação elétrica principais na área da sala de exame proposta?',ops:SNA},
+  {t:'chips',id:'rm-el-eletrocalha-espaco',lbl:'A eletrocalha existente possui espaço para os novos cabos de alimentação da RM?',ops:SNA},
+  {t:'txt',id:'rm-el-alim-qtd',lbl:'Quantidade de cabos alimentadores',ph:'EX: 4 CABOS POR FASE'},
+  {t:'txt',id:'rm-el-alim-bitola',lbl:'Bitola dos alimentadores (mm²)',ph:'EX: 95 MM²'},
  ]},
  {hdr:'Medições a Contratar',itens:[
-  {t:'chips',id:'rm-el-medicao-demanda',num:'6.31',lbl:'Será necessário contratar medição de demanda no painel?',ops:SNA},
-  {t:'chips',id:'rm-el-medicao-aterramento',num:'6.32',lbl:'Será necessário contratar medição para aterramento da subestação?',ops:SNA},
-  {t:'chips',id:'rm-el-qualidade-energia',num:'6.33',lbl:'Será necessário contratar medição da qualidade de energia no painel que alimentará a RM?',ops:SNA},
+  {t:'chips',id:'rm-el-medicao-demanda',lbl:'Será necessário contratar medição de demanda no painel?',ops:SNA},
+  {t:'chips',id:'rm-el-medicao-aterramento',lbl:'Será necessário contratar medição para aterramento da subestação?',ops:SNA},
+  {t:'chips',id:'rm-el-qualidade-energia',lbl:'Será necessário contratar medição da qualidade de energia no painel que alimentará a RM?',ops:SNA},
   {t:'area',id:'rm-obs-el',lbl:'Comentários — Elétrica',ph:'OBSERVAÇÕES DO BLOCO DE ELÉTRICA...'},
  ]},
 ]},
-{id:'rm-s7',eyebrow:'Viabilidade de RM · Etapa 07',titulo:'Climatização',pdfTag:'V7',pdfTitulo:'Climatização',cards:[
+{id:'rm-s7',eyebrow:'Seção 07',titulo:'Climatização',pdfTag:'V7',pdfTitulo:'Climatização',cards:[
  {hdr:'Climatização',itens:[
-  {t:'chips',id:'rm-cl-cag',num:'7.1',lbl:'A unidade possui climatização com Central de Água Gelada (CAG)?',ops:SNA},
-  {t:'txt',id:'rm-cl-cag-qtd',num:'7.2',lbl:'Quantos equipamentos possui a CAG existente',ph:'QTDE'},
-  {t:'txt',id:'rm-cl-cag-taxa',num:'7.3',lbl:'Taxa de operação (demanda) da CAG na unidade',ph:'%'},
-  {t:'chips',id:'rm-cl-cag-redund',num:'7.4',lbl:'A CAG existente possui redundância de equipamentos?',ops:SNN},
-  {t:'txt',id:'rm-cl-oper',num:'7.5',lbl:'Quantos equipamentos são operacionais',ph:'QTDE'},
-  {t:'txt',id:'rm-cl-res',num:'7.6',lbl:'Quantos equipamentos são reserva',ph:'QTDE'},
-  {t:'chips',id:'rm-cl-cag-carga',num:'7.7',lbl:'A CAG existente tem carga disponível para atender a nova RM?',ops:SNA},
-  {t:'txt',id:'rm-cl-carga-disp',num:'7.8',lbl:'Carga disponível (TR)',ph:'TR'},
-  {t:'txt',id:'rm-cl-prumada-temp',num:'7.9',lbl:'Temperatura da água gelada na prumada do pavimento onde será instalada a RM',ph:'°C'},
-  {t:'chips',id:'rm-cl-condensacao',num:'7.10',lbl:'A unidade tem histórico de condensação?',ops:SNA,show:{'SIM':'rm-cl-condensacao-wrap'}},
+  {t:'chips',id:'rm-cl-cag',lbl:'A unidade possui climatização com Central de Água Gelada (CAG)?',ops:SNA},
+  {t:'txt',id:'rm-cl-cag-qtd',lbl:'Quantos equipamentos possui a CAG existente',ph:'QTDE'},
+  {t:'txt',id:'rm-cl-cag-taxa',lbl:'Taxa de operação (demanda) da CAG na unidade',ph:'%'},
+  {t:'chips',id:'rm-cl-cag-redund',lbl:'A CAG existente possui redundância de equipamentos?',ops:SNN},
+  {t:'txt',id:'rm-cl-oper',lbl:'Quantos equipamentos são operacionais',ph:'QTDE'},
+  {t:'txt',id:'rm-cl-res',lbl:'Quantos equipamentos são reserva',ph:'QTDE'},
+  {t:'chips',id:'rm-cl-cag-carga',lbl:'A CAG existente tem carga disponível para atender a nova RM?',ops:SNA},
+  {t:'txt',id:'rm-cl-carga-disp',lbl:'Carga disponível (TR)',ph:'TR'},
+  {t:'txt',id:'rm-cl-prumada-temp',lbl:'Temperatura da água gelada na prumada do pavimento onde será instalada a RM',ph:'°C'},
+  {t:'chips',id:'rm-cl-condensacao',lbl:'A unidade tem histórico de condensação?',ops:SNA,show:{'SIM':'rm-cl-condensacao-wrap'}},
   {t:'cond',id:'rm-cl-condensacao-wrap',itens:[
    {t:'area',id:'rm-cl-condensacao-desc',lbl:'Onde ocorre / descreva o histórico',ph:'EX: GOTEJAMENTO NO FORRO DA CIRCULAÇÃO DO 2º PAV...'},
   ]},
-  {t:'chips',id:'rm-cl-rede-frig',num:'7.11',lbl:'A rede de distribuição frigorígena está em boas condições?',ops:SNA,show:{'NÃO':'rm-cl-rede-frig-wrap'}},
+  {t:'chips',id:'rm-cl-rede-frig',lbl:'A rede de distribuição frigorígena está em boas condições?',ops:SNA,show:{'NÃO':'rm-cl-rede-frig-wrap'}},
   {t:'cond',id:'rm-cl-rede-frig-wrap',itens:[
    {t:'area',id:'rm-cl-rede-frig-desc',lbl:'Descreva a condição da rede',ph:'EX: ISOLAMENTO DEGRADADO, VAZAMENTOS RECORRENTES...'},
   ]},
-  {t:'chips',id:'rm-cl-rm-exist',num:'7.12',lbl:'A unidade possui equipamentos de RM existentes?',ops:['SIM','NÃO']},
-  {t:'txt',id:'rm-cl-rm-qtd',num:'7.13',lbl:'Quantos equipamentos de RM existem na unidade',ph:'QTDE'},
-  {t:'chips',id:'rm-cl-chiller-criogenia',num:'7.14',lbl:'A unidade possui chiller para criogenia existente?',ops:['SIM','NÃO']},
-  {t:'txt',id:'rm-cl-chiller-fab',num:'7.15',lbl:'Fabricante do chiller de criogenia existente',ph:'FABRICANTE'},
-  {t:'chips',id:'rm-cl-rm-integrado',num:'7.16',lbl:'Na RM existente, o sistema de climatização é do tipo integrado?',ops:SNN},
-  {t:'chips',id:'rm-cl-cag-papel',num:'7.17',lbl:'A CAG funciona como sistema operacional ou reserva para a RM existente?',excl:1,ops:['OPERACIONAL','RESERVA','N/A']},
-  {t:'chips',id:'rm-cl-prog-energia',num:'7.18',lbl:'A unidade possui programa de eficiência energética?',ops:SNA},
-  {t:'chips',id:'rm-cl-rede-sobre-sala',num:'7.19',lbl:'Rede de água gelada ou rede de dutos passa sobre a nova sala de RM?',ops:SNA,show:{'SIM':'rm-cl-rede-wrap'}},
+  {t:'chips',id:'rm-cl-rm-exist',lbl:'A unidade possui equipamentos de RM existentes?',ops:['SIM','NÃO']},
+  {t:'txt',id:'rm-cl-rm-qtd',lbl:'Quantos equipamentos de RM existem na unidade',ph:'QTDE'},
+  {t:'chips',id:'rm-cl-chiller-criogenia',lbl:'A unidade possui chiller para criogenia existente?',ops:['SIM','NÃO']},
+  {t:'txt',id:'rm-cl-chiller-fab',lbl:'Fabricante do chiller de criogenia existente',ph:'FABRICANTE'},
+  {t:'chips',id:'rm-cl-rm-integrado',lbl:'Na RM existente, o sistema de climatização é do tipo integrado?',ops:SNN},
+  {t:'chips',id:'rm-cl-cag-papel',lbl:'A CAG funciona como sistema operacional ou reserva para a RM existente?',excl:1,ops:['OPERACIONAL','RESERVA','N/A']},
+  {t:'chips',id:'rm-cl-prog-energia',lbl:'A unidade possui programa de eficiência energética?',ops:SNA},
+  {t:'chips',id:'rm-cl-rede-sobre-sala',lbl:'Rede de água gelada ou rede de dutos passa sobre a nova sala de RM?',ops:SNA,show:{'SIM':'rm-cl-rede-wrap'}},
   {t:'cond',id:'rm-cl-rede-wrap',itens:[
-   {t:'chips',id:'rm-cl-rede-principal',num:'7.20',lbl:'É uma rede principal?',ops:SNA},
-   {t:'chips',id:'rm-cl-rede-desvio',num:'7.21',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+   {t:'chips',id:'rm-cl-rede-principal',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-cl-rede-desvio',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
   ]},
-  {t:'chips',id:'rm-cl-chiller-espaco',num:'7.22',lbl:'Há espaço físico para instalação de chiller dedicado para criogenia?',ops:SNA},
-  {t:'chips',id:'rm-cl-integrado-espaco',num:'7.23',lbl:'Há espaço físico para instalação do sistema integrado?',ops:SNA},
-  {t:'chips',id:'rm-cl-hvac-upgrade',num:'7.24',lbl:'A unidade possui equipamentos de HVAC com especificação técnica para atender o novo equipamento?',hint:'aplicável quando a RM substituir equipamento existente',ops:SNN},
-  {t:'chips',id:'rm-cl-casa-maq',num:'7.25',lbl:'A unidade possui espaço físico para uma nova casa de máquinas?',ops:SNA},
-  {t:'chips',id:'rm-cl-entreforro',num:'7.26',lbl:'A unidade possui espaço físico para equipamentos no entreforro?',ops:SNA},
+  {t:'chips',id:'rm-cl-chiller-espaco',lbl:'Há espaço físico para instalação de chiller dedicado para criogenia?',ops:SNA},
+  {t:'chips',id:'rm-cl-integrado-espaco',lbl:'Há espaço físico para instalação do sistema integrado?',ops:SNA},
+  {t:'chips',id:'rm-cl-hvac-upgrade',lbl:'A unidade possui equipamentos de HVAC com especificação técnica para atender o novo equipamento?',hint:'aplicável quando a RM substituir equipamento existente',ops:SNN},
+  {t:'chips',id:'rm-cl-casa-maq',lbl:'A unidade possui espaço físico para uma nova casa de máquinas?',ops:SNA},
+  {t:'chips',id:'rm-cl-entreforro',lbl:'A unidade possui espaço físico para equipamentos no entreforro?',ops:SNA},
   {t:'area',id:'rm-obs-cl',lbl:'Comentários — Climatização',ph:'OBSERVAÇÕES DO BLOCO DE CLIMATIZAÇÃO...'},
  ]},
 ]},
-{id:'rm-s8',eyebrow:'Viabilidade de RM · Etapa 08',titulo:'Tubo Quench',pdfTag:'V8',pdfTitulo:'Tubo Quench',cards:[
+{id:'rm-s8',eyebrow:'Seção 08',titulo:'Tubo Quench',pdfTag:'V8',pdfTitulo:'Tubo Quench',cards:[
  {hdr:'Tubo Quench',itens:[
-  {t:'chips',id:'rm-tq-viavel',num:'8.1',lbl:'Há local viável para a passagem do tubo quench?',hint:'evidenciar o trajeto por foto',ops:SNA,show:{'SIM':'rm-tq-sim-wrap','NÃO':'rm-tq-nao-wrap'}},
+  {t:'chips',id:'rm-tq-viavel',lbl:'Há local viável para a passagem do tubo quench?',hint:'evidenciar o trajeto por foto',ops:SNA,show:{'SIM':'rm-tq-sim-wrap','NÃO':'rm-tq-nao-wrap'}},
   {t:'cond',id:'rm-tq-sim-wrap',itens:[
-   {t:'txt',id:'rm-tq-distancia',num:'8.2',lbl:'Distância do percurso até a saída externa (m)',ph:'EX: 18 M — VERIFICAR TRAJETO NO LOCAL'},
+   {t:'txt',id:'rm-tq-distancia',lbl:'Distância do percurso até a saída externa (m)',ph:'EX: 18 M — VERIFICAR TRAJETO NO LOCAL'},
    {t:'area',id:'rm-tq-trajeto',lbl:'Descrição do trajeto previsto',ph:'EX: SOBE PELO SHAFT DA SALA TÉCNICA, PERCORRE O ENTREFORRO DA CIRCULAÇÃO E SAI PELA FACHADA POSTERIOR...'},
-   {t:'chips',id:'rm-tq-reuso',num:'8.3',lbl:'Será utilizado o trajeto do tubo quench existente (no caso de troca de equipamento)?',ops:SNN},
-   {t:'chips',id:'rm-tq-espaco',num:'8.4',lbl:'No trajeto até a área externa, há espaço disponível para a passagem?',ops:SNA},
+   {t:'chips',id:'rm-tq-reuso',lbl:'Será utilizado o trajeto do tubo quench existente (no caso de troca de equipamento)?',ops:SNN},
+   {t:'chips',id:'rm-tq-espaco',lbl:'No trajeto até a área externa, há espaço disponível para a passagem?',ops:SNA},
   ]},
   {t:'cond',id:'rm-tq-nao-wrap',itens:[
    {t:'aviso',html:'💡 Sem trajeto viável para o tubo quench: avaliar equipamento <b>sem tubo quench</b> — tecnicamente possível, porém com custo significativamente maior. Registrar para a estimativa.'},
@@ -3021,97 +3022,97 @@ const RM_DEF=[
   {t:'area',id:'rm-obs-inst',lbl:'Comentários — Tubo Quench',ph:'OBSERVAÇÕES SOBRE O TRAJETO E A ALTERNATIVA...'},
  ]},
 ]},
-{id:'rm-s9',eyebrow:'Viabilidade de RM · Etapa 09',titulo:'Gases, Incêndio e Hidráulica',pdfTag:'V9',pdfTitulo:'Gases, Incêndio e Hidráulica',cards:[
+{id:'rm-s9',eyebrow:'Seção 09',titulo:'Gases, Incêndio e Hidráulica',pdfTag:'V9',pdfTitulo:'Gases, Incêndio e Hidráulica',cards:[
  {hdr:'Gases Medicinais',itens:[
-  {t:'chips',id:'rm-gas-redes',num:'9.1',lbl:'Existem redes de gases medicinais sobre a sala, sob o piso ou no interior das paredes do layout proposto?',ops:SNA,show:{'SIM':'rm-gas-wrap'}},
+  {t:'chips',id:'rm-gas-redes',lbl:'Existem redes de gases medicinais sobre a sala, sob o piso ou no interior das paredes do layout proposto?',ops:SNA,show:{'SIM':'rm-gas-wrap'}},
   {t:'cond',id:'rm-gas-wrap',itens:[
-   {t:'chips',id:'rm-gas-principal',num:'9.2',lbl:'É uma rede principal?',ops:SNA},
-   {t:'chips',id:'rm-gas-desvio-nec',num:'9.3',lbl:'Será necessário desvio das redes de gases medicinais?',ops:SNA},
-   {t:'chips',id:'rm-gas-desvio-pos',num:'9.4',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+   {t:'chips',id:'rm-gas-principal',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-gas-desvio-nec',lbl:'Será necessário desvio das redes de gases medicinais?',ops:SNA},
+   {t:'chips',id:'rm-gas-desvio-pos',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
   ]},
-  {t:'txt',id:'rm-gas-quais',num:'9.5',lbl:'Quais gases medicinais existem na área?',ph:'EX: O², AR COMPRIMIDO, VÁCUO'},
+  {t:'txt',id:'rm-gas-quais',lbl:'Quais gases medicinais existem na área?',ph:'EX: O², AR COMPRIMIDO, VÁCUO'},
   {t:'area',id:'rm-obs-gas',lbl:'Comentários — Gases Medicinais',ph:'OBSERVAÇÕES DO BLOCO DE GASES...'},
  ]},
  {hdr:'Prevenção e Combate a Incêndio',itens:[
-  {t:'chips',id:'rm-ci-vesda',num:'9.6',lbl:'Há sistema VESDA em operação que permita derivação para a nova sala?',ops:SNN},
-  {t:'chips',id:'rm-ci-spk-projeto',num:'9.7',lbl:'O projeto de bombeiros solicita combate a incêndio automático (SPK) na nova sala de exame de RM?',ops:SNA},
-  {t:'txt',id:'rm-ci-nivel',num:'9.8',lbl:'Classificação do nível de exigência de segurança da unidade',ph:'NÍVEL'},
-  {t:'chips',id:'rm-ci-spk-nivel',num:'9.9',lbl:'Pelo nível de segurança da unidade, o SPK é exigido na nova sala?',ops:SNA},
-  {t:'chips',id:'rm-ci-derivacao',num:'9.10',lbl:'O sistema de combate existente pode ser derivado para um sistema de pré-ação para a nova RM?',ops:SNA},
-  {t:'chips',id:'rm-ci-preacao',num:'9.11',lbl:'A unidade possui sistema de pré-ação existente?',ops:SNA},
-  {t:'chips',id:'rm-ci-redes',num:'9.12',lbl:'Existem redes de combate a incêndio sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-ci-wrap'}},
+  {t:'chips',id:'rm-ci-vesda',lbl:'Há sistema VESDA em operação que permita derivação para a nova sala?',ops:SNN},
+  {t:'chips',id:'rm-ci-spk-projeto',lbl:'O projeto de bombeiros solicita combate a incêndio automático (SPK) na nova sala de exame de RM?',ops:SNA},
+  {t:'txt',id:'rm-ci-nivel',lbl:'Classificação do nível de exigência de segurança da unidade',ph:'NÍVEL'},
+  {t:'chips',id:'rm-ci-spk-nivel',lbl:'Pelo nível de segurança da unidade, o SPK é exigido na nova sala?',ops:SNA},
+  {t:'chips',id:'rm-ci-derivacao',lbl:'O sistema de combate existente pode ser derivado para um sistema de pré-ação para a nova RM?',ops:SNA},
+  {t:'chips',id:'rm-ci-preacao',lbl:'A unidade possui sistema de pré-ação existente?',ops:SNA},
+  {t:'chips',id:'rm-ci-redes',lbl:'Existem redes de combate a incêndio sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-ci-wrap'}},
   {t:'cond',id:'rm-ci-wrap',itens:[
-   {t:'chips',id:'rm-ci-principal',num:'9.13',lbl:'É uma rede principal?',ops:SNA},
-   {t:'chips',id:'rm-ci-desvio-nec',num:'9.14',lbl:'Será necessário desvio das redes de combate a incêndio?',ops:SNA},
-   {t:'chips',id:'rm-ci-desvio-pos',num:'9.15',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
+   {t:'chips',id:'rm-ci-principal',lbl:'É uma rede principal?',ops:SNA},
+   {t:'chips',id:'rm-ci-desvio-nec',lbl:'Será necessário desvio das redes de combate a incêndio?',ops:SNA},
+   {t:'chips',id:'rm-ci-desvio-pos',lbl:'É possível realizar o desvio dessas redes?',ops:SNA},
   ]},
   {t:'area',id:'rm-obs-ci',lbl:'Comentários — Combate a Incêndio',ph:'OBSERVAÇÕES DO BLOCO DE INCÊNDIO...'},
  ]},
  {hdr:'Rede Hidráulica',itens:[
-  {t:'chips',id:'rm-hi-redes',num:'9.16',lbl:'Existem redes hidráulicas sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-hi-wrap'}},
+  {t:'chips',id:'rm-hi-redes',lbl:'Existem redes hidráulicas sobre a sala, sob o piso ou no interior das paredes?',ops:SNA,show:{'SIM':'rm-hi-wrap'}},
   {t:'cond',id:'rm-hi-wrap',itens:[
-   {t:'chips',id:'rm-hi-desvio',num:'9.17',lbl:'Será necessário desvio das redes hidráulicas?',ops:SNA},
+   {t:'chips',id:'rm-hi-desvio',lbl:'Será necessário desvio das redes hidráulicas?',ops:SNA},
   ]},
   {t:'area',id:'rm-obs-hi',lbl:'Comentários — Rede Hidráulica',ph:'OBSERVAÇÕES DO BLOCO HIDRÁULICO...'},
  ]},
 ]},
-{id:'rm-s10',eyebrow:'Viabilidade de RM · Etapa 10',titulo:'Entrada do Equipamento',pdfTag:'V10',pdfTitulo:'Entrada do Equipamento',cards:[
+{id:'rm-s10',eyebrow:'Seção 10',titulo:'Entrada do Equipamento',pdfTag:'V10',pdfTitulo:'Entrada do Equipamento',cards:[
  {hdr:'Entrada do Equipamento',itens:[
-  {t:'chips',id:'rm-ent-facil',num:'10.1',lbl:'O acesso para a entrada do equipamento é favorável?',ops:SNA},
-  {t:'chips',id:'rm-ent-rm-exist',num:'10.2',lbl:'A unidade possui equipamento de RM existente?',ops:['SIM','NÃO'],show:{'SIM':'rm-ent-caminho-wrap'}},
+  {t:'chips',id:'rm-ent-facil',lbl:'O acesso para a entrada do equipamento é favorável?',ops:SNA},
+  {t:'chips',id:'rm-ent-rm-exist',lbl:'A unidade possui equipamento de RM existente?',ops:['SIM','NÃO'],show:{'SIM':'rm-ent-caminho-wrap'}},
   {t:'cond',id:'rm-ent-caminho-wrap',itens:[
    {t:'txt',id:'rm-ent-caminho',lbl:'Qual foi o caminho para a entrada desse equipamento?',ph:'DESCREVA O TRAJETO USADO'},
   ]},
-  {t:'chips',id:'rm-ent-avaliado',num:'10.3',lbl:'Foi avaliado o melhor caminho para a entrada do equipamento?',ops:SNA},
-  {t:'chips',id:'rm-ent-escoramento',num:'10.4',lbl:'Será necessário escoramento no pavimento inferior?',ops:SNA,show:{'SIM':'rm-ent-escoramento-wrap'}},
+  {t:'chips',id:'rm-ent-avaliado',lbl:'Foi avaliado o melhor caminho para a entrada do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-escoramento',lbl:'Será necessário escoramento no pavimento inferior?',ops:SNA,show:{'SIM':'rm-ent-escoramento-wrap'}},
   {t:'cond',id:'rm-ent-escoramento-wrap',itens:[
    {t:'chips',id:'rm-ent-escoramento-pos',lbl:'É possível executar o escoramento no andar inferior?',ops:SNA},
   ]},
-  {t:'num',id:'rm-ent-pd',num:'10.5',lbl:'Pé-direito da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,50 m',ph:'EX: 2.60',alerta:{min:2.5,id:'rm-al-entpd',msg:'Pé-direito do trajeto de entrada abaixo do mínimo de 2,50 m',ph:'EX: REMOVER FORRO / AVALIAR TRAJETO ALTERNATIVO...'}},
-  {t:'chips',id:'rm-ent-forro',num:'10.6',lbl:'Será necessário remover forro no trajeto de entrada?',ops:SNA},
-  {t:'num',id:'rm-ent-larg',num:'10.7',lbl:'Largura da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,20 m em trecho reto · 2,50 m com curva',ph:'EX: 2.30',alerta:{min:2.2,id:'rm-al-entlarg',msg:'Largura do trajeto de entrada abaixo do mínimo de 2,20 m',ph:'EX: DEMOLIR PAREDES / TRAJETO ALTERNATIVO / AVALIAR IÇAMENTO...'}},
-  {t:'chips',id:'rm-ent-paredes',num:'10.8',lbl:'Será necessário demolir paredes?',ops:SNA},
-  {t:'chips',id:'rm-ent-desmontar',num:'10.9',lbl:'Será necessário desmontar elementos que dificultem a passagem (portas, catracas, marcenarias)?',ops:SNA,show:{'SIM':'rm-ent-desmontar-wrap'}},
+  {t:'num',id:'rm-ent-pd',lbl:'Pé-direito da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,50 m',ph:'EX: 2.60',alerta:{min:2.5,id:'rm-al-entpd',msg:'Pé-direito do trajeto de entrada abaixo do mínimo de 2,50 m',ph:'EX: REMOVER FORRO / AVALIAR TRAJETO ALTERNATIVO...'}},
+  {t:'chips',id:'rm-ent-forro',lbl:'Será necessário remover forro no trajeto de entrada?',ops:SNA},
+  {t:'num',id:'rm-ent-larg',lbl:'Largura da circulação no trajeto do equipamento (m)',hint:'mínimo: 2,20 m em trecho reto · 2,50 m com curva',ph:'EX: 2.30',alerta:{min:2.2,id:'rm-al-entlarg',msg:'Largura do trajeto de entrada abaixo do mínimo de 2,20 m',ph:'EX: DEMOLIR PAREDES / TRAJETO ALTERNATIVO / AVALIAR IÇAMENTO...'}},
+  {t:'chips',id:'rm-ent-paredes',lbl:'Será necessário demolir paredes?',ops:SNA},
+  {t:'chips',id:'rm-ent-desmontar',lbl:'Será necessário desmontar elementos que dificultem a passagem (portas, catracas, marcenarias)?',ops:SNA,show:{'SIM':'rm-ent-desmontar-wrap'}},
   {t:'cond',id:'rm-ent-desmontar-wrap',itens:[
    {t:'txt',id:'rm-ent-desmontar-desc',lbl:'O que será desmontado?',ph:'EX: PORTA DUPLA DA RECEPÇÃO, CATRACA DO ACESSO...'},
   ]},
-  {t:'chips',id:'rm-ent-icamento',num:'10.10',lbl:'Será necessário içamento do equipamento?',ops:SNA},
-  {t:'chips',id:'rm-ent-rua',num:'10.11',lbl:'Será necessário fechamento de rua?',ops:SNA},
-  {t:'chips',id:'rm-ent-fds',num:'10.12',lbl:'Será necessário executar aos fins de semana?',ops:SNA},
-  {t:'chips',id:'rm-ent-noturno',num:'10.13',lbl:'Será necessário executar em horário noturno?',ops:SNA},
-  {t:'chips',id:'rm-ent-fachada',num:'10.14',lbl:'Será necessária abertura de fachada para a entrada do equipamento?',ops:SNA},
-  {t:'chips',id:'rm-ent-ancoragem',num:'10.15',lbl:'Será necessária instalação de pontos de ancoragem?',ops:SNA},
-  {t:'chips',id:'rm-ent-desmont-equip',num:'10.16',lbl:'Será necessária desmontagem de equipamentos para a passagem?',ops:SNA,show:{'SIM':'rm-ent-desmont-equip-wrap'}},
+  {t:'chips',id:'rm-ent-icamento',lbl:'Será necessário içamento do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-rua',lbl:'Será necessário fechamento de rua?',ops:SNA},
+  {t:'chips',id:'rm-ent-fds',lbl:'Será necessário executar aos fins de semana?',ops:SNA},
+  {t:'chips',id:'rm-ent-noturno',lbl:'Será necessário executar em horário noturno?',ops:SNA},
+  {t:'chips',id:'rm-ent-fachada',lbl:'Será necessária abertura de fachada para a entrada do equipamento?',ops:SNA},
+  {t:'chips',id:'rm-ent-ancoragem',lbl:'Será necessária instalação de pontos de ancoragem?',ops:SNA},
+  {t:'chips',id:'rm-ent-desmont-equip',lbl:'Será necessária desmontagem de equipamentos para a passagem?',ops:SNA,show:{'SIM':'rm-ent-desmont-equip-wrap'}},
   {t:'cond',id:'rm-ent-desmont-equip-wrap',itens:[
    {t:'txt',id:'rm-ent-desmont-equip-desc',lbl:'Quais equipamentos?',ph:'EX: TOMÓGRAFO DA SALA 2, EQUIPOS DA CENTRAL DE AR...'},
   ]},
-  {t:'txt',id:'rm-ent-salas',num:'10.17',lbl:'Quais salas terão intervenção para a passagem?',ph:'LISTE AS SALAS'},
+  {t:'txt',id:'rm-ent-salas',lbl:'Quais salas terão intervenção para a passagem?',ph:'LISTE AS SALAS'},
  ]},
 ]},
-{id:'rm-s11',eyebrow:'Viabilidade de RM · Etapa 11',titulo:'Remanejamentos e Faseamento',pdfTag:'V11',pdfTitulo:'Remanejamentos e Faseamento',cards:[
+{id:'rm-s11',eyebrow:'Seção 11',titulo:'Remanejamentos e Faseamento',pdfTag:'V11',pdfTitulo:'Remanejamentos e Faseamento',cards:[
  {hdr:'Remanejamentos e Faseamento',itens:[
-  {t:'chips',id:'rm-laje-inf-reman',num:'11.1',lbl:'Será necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento inferior?',ops:SNA,show:{'SIM':'rm-laje-inf-reman-wrap'}},
+  {t:'chips',id:'rm-laje-inf-reman',lbl:'Será necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento inferior?',ops:SNA,show:{'SIM':'rm-laje-inf-reman-wrap'}},
   {t:'cond',id:'rm-laje-inf-reman-wrap',itens:[
    {t:'area',id:'rm-laje-inf-reman-desc',lbl:'O que precisa ser remanejado / readequado?',ph:'EX: REFORÇO ESTRUTURAL DA LAJE, INTERFERÊNCIA DA BLINDAGEM DA RM COM O AMBIENTE INFERIOR, DESVIO DE INSTALAÇÕES...'},
   ]},
-  {t:'chips',id:'rm-laje-sup-reman',num:'11.2',lbl:'Será necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento superior?',ops:SNA,show:{'SIM':'rm-laje-sup-reman-wrap'}},
+  {t:'chips',id:'rm-laje-sup-reman',lbl:'Será necessário remanejamento, readequação de áreas ou desvio de instalações no pavimento superior?',ops:SNA,show:{'SIM':'rm-laje-sup-reman-wrap'}},
   {t:'cond',id:'rm-laje-sup-reman-wrap',itens:[
    {t:'area',id:'rm-laje-sup-reman-desc',lbl:'O que precisa ser remanejado / readequado?',ph:'EX: DESVIO DE REDES DE ÁGUA GELADA E DUTOS, READEQUAÇÃO DE ÁREA OCUPADA...'},
   ]},
-  {t:'chips',id:'rm-aprov',num:'11.3',lbl:'Há elementos reaproveitáveis na área remanejada (visor, porta, bancadas)?',ops:SNA,show:{'SIM':'rm-aprov-wrap'}},
+  {t:'chips',id:'rm-aprov',lbl:'Há elementos reaproveitáveis na área remanejada (visor, porta, bancadas)?',ops:SNA,show:{'SIM':'rm-aprov-wrap'}},
   {t:'cond',id:'rm-aprov-wrap',itens:[
    {t:'area',id:'rm-aprov-desc',lbl:'Quais elementos e para onde?',ph:'EX: VISOR DA SALA DE COMANDO REMANEJÁVEL; PORTA APROVEITÁVEL NA NOVA POSIÇÃO; BANCADA REALOCADA PARA O PREPARO...'},
   ]},
-  {t:'chips',id:'rm-fase',num:'11.4',lbl:'Será necessário faseamento da obra?',hint:'remanejamentos e áreas em operação costumam exigir etapas',ops:SNA,show:{'SIM':'rm-fase-wrap'}},
+  {t:'chips',id:'rm-fase',lbl:'Será necessário faseamento da obra?',hint:'remanejamentos e áreas em operação costumam exigir etapas',ops:SNA,show:{'SIM':'rm-fase-wrap'}},
   {t:'cond',id:'rm-fase-wrap',itens:[
    {t:'area',id:'rm-fase-desc',lbl:'Descreva o faseamento previsto',ph:'EX: FASE 1 — REMANEJAR ÁREA DO PAVIMENTO INFERIOR; FASE 2 — REFORÇO ESTRUTURAL; FASE 3 — OBRA DA SALA DE RM...'},
   ]},
  ]},
 ]},
-{id:'rm-s12',eyebrow:'Viabilidade de RM · Etapa 12',titulo:'Custo',desc:'Os valores vivem no Relatório Técnico de Estimativa — aqui só a verificação.',pdfTag:'V12',pdfTitulo:'Custo',cards:[
+{id:'rm-s12',eyebrow:'Seção 12',titulo:'Custo',desc:'Os valores vivem no Relatório Técnico de Estimativa — aqui só a verificação.',pdfTag:'V12',pdfTitulo:'Custo',cards:[
  {hdr:'Custo',preench:'rm-prf-custo',itens:[
-  {t:'chips',id:'rm-custo-estimativa',num:'12.1',lbl:'Relatório Técnico de Estimativa elaborado?',excl:1,ops:['SIM','NÃO','EM ANDAMENTO']},
-  {t:'chips',id:'rm-custo-extras',num:'12.2',lbl:'As intervenções extras identificadas neste estudo foram consideradas na estimativa?',ops:SNA},
+  {t:'chips',id:'rm-custo-estimativa',lbl:'Relatório Técnico de Estimativa elaborado?',excl:1,ops:['SIM','NÃO','EM ANDAMENTO']},
+  {t:'chips',id:'rm-custo-extras',lbl:'As intervenções extras identificadas neste estudo foram consideradas na estimativa?',ops:SNA},
   {t:'area',id:'rm-obs-custo',lbl:'Comentários — Custo',ph:'OBSERVAÇÕES...'},
  ]},
 ]},
@@ -3166,7 +3167,7 @@ function montarModuloRM(){
   });
   // Seção de fotos do modo RM (mesma galeria do relatório; legendas rápidas específicas de RM)
   html+=`<div class="section" id="rm-s13">
-    <div class="sec-eyebrow">Viabilidade de RM · Etapa 13</div>
+    <div class="sec-eyebrow">Seção 13</div>
     <div class="sec-title">Registro Fotográfico</div>
     <div class="rm-aviso" style="margin-bottom:1rem"><b>Evidências desta vistoria:</b> painel elétrico que alimentará o equipamento · disjuntores disponíveis · local proposto para a sala · trajeto de entrada do equipamento · local do chiller / casa de máquinas · trajeto do tubo quench. Fotos na horizontal.</div>
     <div id="fotos-lista-rm"></div>
@@ -3177,7 +3178,7 @@ function montarModuloRM(){
   </div>`;
   // Seção de resultado
   html+=`<div class="section" id="rm-s14">
-    <div class="sec-eyebrow">Viabilidade de RM · Etapa 14</div>
+    <div class="sec-eyebrow">Seção 14</div>
     <div class="sec-title">Resultado da Avaliação</div>
     <div id="rm-alertas-resumo"></div>
     <div class="card">
@@ -3242,7 +3243,7 @@ function alertasAtivosRM(){
       const sec=el.closest('.section');
       const i=sec?RM_SECS.indexOf(sec.id):-1;
       return {msg:el.dataset.msg,just:(el.querySelector('textarea')||{}).value||'',
-        origem:i>=0?'ETAPA '+String(i+1).padStart(2,'0')+' · '+RM_LBLS[i]:''};
+        origem:i>=0?'SEÇÃO '+String(i+1).padStart(2,'0')+' · '+RM_LBLS[i]:''};
     });
 }
 function buildResultadoRM(){
@@ -3307,7 +3308,7 @@ function linhasPdfRM(itens,R){
       const el=document.getElementById(item.alerta.id);
       if(el&&el.style.display==='block'){
         const just=R[item.alerta.id+'-just']||'';
-        html+=`</tbody></table><div class="alerta"><div class="alerta-t">⚠︎ Impedimento potencial${item.num?' · item '+item.num:''}</div><div class="alerta-x">${item.alerta.msg}</div>${just?`<div class="alerta-j">Justificativa: ${just}</div>`:''}</div><table><tbody>`;
+        html+=`</tbody></table><div class="alerta"><div class="alerta-t">⚠︎ Impedimento potencial</div><div class="alerta-x">${item.alerta.msg}</div>${just?`<div class="alerta-j">Justificativa: ${just}</div>`:''}</div><table><tbody>`;
       }
     }
   });
@@ -3355,10 +3356,10 @@ function gerarPDFRM(){
         corpo+=`<div class="bloco"><div class="bloco-t">${card.hdr}</div>${conteudo}</div>`;
       });
       if(!corpo)return;
-      html2+=`<div class="sec"><div class="sec-h"><div class="sec-eyebrow">Etapa ${String(i+1).padStart(2,'0')}</div><div class="sec-tit">${sec.titulo}</div></div>${corpo}</div>`;
+      html2+=`<div class="sec"><div class="sec-h"><div class="sec-eyebrow">Seção ${String(i+1).padStart(2,'0')}</div><div class="sec-tit">${sec.titulo}</div></div>${corpo}</div>`;
     });
 
-    if(fotosH)html2+=`<div class="sec quebra"><div class="sec-h"><div class="sec-eyebrow">Etapa 13</div><div class="sec-tit">Registro Fotográfico</div></div><div class="fg">${fotosH}</div></div>`;
+    if(fotosH)html2+=`<div class="sec quebra"><div class="sec-h"><div class="sec-eyebrow">Seção 13</div><div class="sec-tit">Registro Fotográfico</div></div><div class="fg">${fotosH}</div></div>`;
 
     let res='';
     if(par)res+=`<div class="parecer ${par[0]}"><div class="parecer-rotulo">Parecer<br>técnico</div><div class="parecer-grau">${par[1]}</div></div>`;
@@ -3371,7 +3372,7 @@ function gerarPDFRM(){
     if(R['rm-just-ress'])res+=`<div class="bloco"><div class="bloco-t">Justificativa das ressalvas</div><div class="obs">${R['rm-just-ress']}</div></div>`;
     if(R['rm-just-nao'])res+=`<div class="bloco"><div class="bloco-t">Justificativa da negativa</div><div class="obs">${R['rm-just-nao']}</div></div>`;
     if(R['rm-parecer'])res+=`<div class="bloco"><div class="bloco-t">Parecer final</div><div class="obs">${R['rm-parecer']}</div></div>`;
-    html2+=`<div class="sec quebra"><div class="sec-h"><div class="sec-eyebrow">Etapa 14</div><div class="sec-tit">Resultado</div></div>${res}</div>`;
+    html2+=`<div class="sec quebra"><div class="sec-h"><div class="sec-eyebrow">Seção 14</div><div class="sec-tit">Resultado</div></div>${res}</div>`;
 
     html2+=`</div></td></tr></tbody></table>`;
 
@@ -3545,7 +3546,7 @@ function montarMapa(){
     const sub=pct>=100?'✓ COMPLETA':(p.resp===0?'NÃO INICIADA':p.resp+' DE '+p.total);
     return `<button class="tile ${cls}" onclick="irParaSecao(${i})">
       ${al?`<span class="t-dot">⚠︎ ${al}</span>`:''}
-      <span class="t-topo">${anelSVG(pct,42)}<span style="min-width:0"><span class="t-sec"><svg class="tic" viewBox="0 0 24 24"><path d="${IC[i]}"/></svg>${rm?'ETAPA':'SEC'} ${String(i+1).padStart(2,'0')}</span><br><span class="t-nome">${L[i]}</span></span></span>
+      <span class="t-topo">${anelSVG(pct,42)}<span style="min-width:0"><span class="t-sec"><svg class="tic" viewBox="0 0 24 24"><path d="${IC[i]}"/></svg>SEC ${String(i+1).padStart(2,'0')}</span><br><span class="t-nome">${L[i]}</span></span></span>
       <span class="t-sub">${sub}</span></button>`;
   }).join('');
   document.getElementById('grade-mapa').innerHTML=tiles;
@@ -3582,7 +3583,17 @@ function irParaSecao(i){
 }
 
 /* ── BLOCOS RECOLHÍVEIS: envolve cada card com cabeçalho clicável + contador ── */
+/* ícone do índice ao lado do título de cada seção (mesma linguagem do mapa) */
+function montarIconesSecoes(){
+  const IC=iconesAtual();
+  secsAtual().forEach((id,i)=>{
+    const t=document.querySelector('#'+id+' .sec-title');
+    if(!t||t.querySelector('.sec-icone')||!IC[i])return;
+    t.insertAdjacentHTML('afterbegin',`<svg class="sec-icone" viewBox="0 0 24 24" aria-hidden="true"><path d="${IC[i]}"/></svg>`);
+  });
+}
 function montarBlocos(){
+  montarIconesSecoes();
   document.querySelectorAll('.section .card').forEach(card=>{
     if(card.dataset.bloco)return;
     const hdr=card.querySelector(':scope > .card-header');
@@ -3733,7 +3744,7 @@ function checarRascunhoNaAbertura(){
   setTimeout(()=>{montarBlocos();montarHome();},500);
 }
 const _escolherModoBase=escolherModo;
-escolherModo=function(m,silencioso){fecharMapa();_escolherModoBase(m,silencioso);atualizarContadores();};
+escolherModo=function(m,silencioso){fecharMapa();_escolherModoBase(m,silencioso);montarIconesSecoes();atualizarContadores();};
 const _abrirHomeBase=abrirHome;
 abrirHome=function(){collectText();salvarRascunhoAutomatico();fecharMapa();montarHome();document.getElementById('modo-home').style.display='flex';};
 
